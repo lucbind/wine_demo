@@ -15,8 +15,8 @@ pipeline {
             steps {
                 //try
             sh "pwd"                
-            sh "cd json-in-db-master/WineDemo"
-            sh "docker build . -t windemo:1"
+            //sh "cd json-in-db-master/WineDemo"
+            sh "sudo docker build json-in-db-master/WineDemo/. -t windemo:1"
             //sh "docker build /var/lib/jenkins/workspace/wine_demo_master/json-in-db-master/WineDemo/. -t windemo:1"
             }    
         } 
