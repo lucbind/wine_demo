@@ -1,0 +1,96 @@
+kind: Service
+apiVersion: v1
+metadata:
+  name: winedemo
+  namespace: win-demo-json
+  labels:
+    app: winedemo
+  annotations:
+    service.beta.kubernetes.io/oci-load-balancer-shape: "100Mbps"
+#    service.beta.kubernetes.io/oci-load-balancer-ssl-ports: "443"
+#    service.beta.kubernetes.io/oci-load-balancer-tls-secret:  ssl-certificate-secret2021
+spec:
+  type: LoadBalancer
+  selector:
+    app: winedemo
+  ports:
+  - port: 80
+    targetPort: 3000
+    name: http
+#  - port: 443
+#    targetPort: 3000
+#    name: https  
+---
+kind: Deployment
+apiVersion: apps/v1
+metadata:
+  name: winedemo
+  namespace: win-demo-json
+spec:
+  replicas: 1
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 0
+  selector:
+    matchLabels:
+      app: winedemo
+  template:
+    metadata:
+      labels:
+        app: winedemo
+        version: v1
+    spec:
+      containers:
+      - name: winedemo
+        image:  fra.ocir.io/emeaseitalysandbox/lbindi-registry/win-demo-json/winedemo:1.0
+        resources:
+          limits:
+            cpu: "1"
+          requests:
+            cpu: "0.5"
+        env:
+        - name: NODE_ORACLEDB_USER
+          value: "ADMIN"
+        - name: NODE_ORACLEDB_PASSWORD
+          value: "DataBase##11"
+        - name: NODE_ORACLEDB_CONNECTIONSTRING
+          value: "jsonattack_high"        
+        - name: TNS_ADMIN
+          value: "/wallet"        
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 3000
+      imagePullSecrets:
+        - name: ocirsecret
+#      nodeSelector: 
+#        name: PRO
+---
+apiVersion: autoscaling/v2beta2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: winedemo
+  namespace: win-demo-json
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: winedemo
+  minReplicas: 1
+  maxReplicas: 2
+  metrics:
+  - type: Resource
+    resource:
+      name: cpu
+      target:
+        type: Utilization
+        averageUtilization: 75
+  - type: Pods
+    pods:
+      metric:
+        name: packets-per-second
+      target:
+        type: AverageValue
+        averageValue: 1k
+---

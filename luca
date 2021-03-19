@@ -1,0 +1,36 @@
+pipeline {
+    agent any 
+   stages {
+    stage('Clone Git') {
+        steps {
+           // The below will clone your repo and will be checked out to master branch by default.
+           git  url: 'https://github.com/lucbind/wine_demo.git'
+          }  
+    }   
+        stage('Build docker image') {
+        /* This stage builds the actual image; synonymous to  docker build on the command line */
+            steps {
+            sh "pwd"
+            sh "sudo docker build . -t windemo:1"
+            }    
+        } 
+        stage('Push image to OCIR') {
+         /* Final stage of build; Push the  docker image to our OCI private Registry*/
+        steps {
+            sh "sudo docker login -u 'emeaseitalysandbox/oracleidentitycloud/luca.bindi@oracle.com' -p 'uASDz34:E0c)4i0uh{m]' eu-frankfurt-1.ocir.io"
+            sh "sudo docker tag windemo:1 eu-frankfurt-1.ocir.io/emeaseitalysandbox/windemo:1"
+            sh 'sudo docker push eu-frankfurt-1.ocir.io/emeaseitalysandbox/windemo:1'
+           }
+         }         
+         stage('Deploy to OKE') {
+         /* Deploy the image to OKE */
+        steps {
+            /*sh "'sudo cp /var/lib/jenkins/workspace/deploy.sh /var/lib/jenkins/workspace/jenkins-oci_master'"*/
+            sudo runuser -l opc -c "kubectl create secret docker-registry secret --docker-server=eu-frankfurt-1.ocir.io --docker-username='emeaseitalysandbox/oracleidentitycloud/luca.bindi@oracle.com' --docker-password='uASDz34:E0c)4i0uh{m]' --docker-email='a@b.com'"
+            sudo runuser -l opc -c "sudo docker login -u 'emeaseitalysandbox/oracleidentitycloud/luca.bindi@oracle.com' -p 'uASDz34:E0c)4i0uh{m]' eu-frankfurt-1.ocir.io"
+            sudo runuser -l opc -c 'kubectl apply -f /var/lib/jenkins/hello.yml'
+
+           }
+         }  
+    }
+}       
