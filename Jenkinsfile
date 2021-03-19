@@ -14,7 +14,7 @@ pipeline {
         /* This stage builds the actual image; synonymous to  docker build on the command line */
             steps {
             sh "pwd"                
-            sh "cd /wine_demo_master/json-in-db-master/WineDemo"
+            sh "cd json-in-db-master/WineDemo"
             sh "docker build . -t windemo:1"
             }    
         } 
