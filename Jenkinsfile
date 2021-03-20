@@ -46,7 +46,7 @@ pipeline {
                     timeout(time: 300, unit: 'SECONDS') {
                         waitUntil {
                             script {
-                                /usr/local/bin/oci db autonomous-database get --autonomous-database-id $identifier_clone --raw-output --query "data.\"lifecycle-state\"", returnStdout:'AVAILABLE'
+                                sh '/usr/local/bin/oci db autonomous-database get --autonomous-database-id $identifier_clone --raw-output --query "data.\"lifecycle-state\""', returnStdout:'AVAILABLE'
                                 return (r == 0);
                              }
                         }
