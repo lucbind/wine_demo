@@ -4,7 +4,7 @@ pipeline {
         // variabili per identificare l'autonomous  
         compartmentid="ocid1.compartment.oc1..aaaaaaaagy2e2ixqkhyyy2sp3dfguaabkz6oe55bxuh2pldev7ozbmeiiczq"
         identifier="ocid1.autonomousdatabase.oc1.eu-frankfurt-1.abtheljserxr32aqe7al6ppxi5kl3vd3zzfftvo34fuk6jogqf6l2t5mxweq"
-        dbname="event01"
+        dbname="JSONATTACK"
 /*        
         compartmentid="""${sh(
                             returnStdout: true,
@@ -41,7 +41,7 @@ pipeline {
             }    
         }
 
-/*        
+       
         stage('Get Wallet') {
                 steps {       
                     /*      
@@ -52,11 +52,12 @@ pipeline {
                             status == "AVAILABLE"
                          }
                          //
-                    } */   /*           
+                    } */      
+                    identifier_clone=`oci search resource free-text-search --text ${dbname}01 --raw-output --query "data.items[?contains(\"resource-type\", 'AutonomousDatabase')].\"identifier\"|[0]"`      
                     sh "/usr/local/bin/oci --config-file /home/jenkins/.oci/config db autonomous-database generate-wallet --autonomous-database-id $identifier_clone --file dbwallet.zip --password DataBase##11"
                 }  
         }     
- */                
+               
 
 /*        stage('Get Wallet') {
              when {
