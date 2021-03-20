@@ -1,30 +1,21 @@
 pipeline {
     agent any 
-
-     parameters {
-                string(name: 'compartment',  description: 'Target compartment for the ORM Stack')
-                string(name: 'availability_domain',  description: 'Target AD for the ORM Stack')
-                string(name: 'image',  description: 'Image used to spin up the compute node')
-            }
-
      environment ('Set Variable database') {
         // variabili per identificare l'autonomous  
-
-        compartmentid=sh '''/usr/local/bin/oci --config-file /home/opc/.oci/config search resource free-text-search --text JSON_ATTACK --raw-output --query "data.items[?contains(\"resource-type\", \'AutonomousDatabase\')].\"compartment-id\"|[0]"'''
-        
+        compartmentid="""${sh(
+                            returnStdout: true,
+                            script: '/usr/local/bin/oci search resource free-text-search --text JSON_ATTACK --raw-output --query "data.items[?contains(\"resource-type\", \'AutonomousDatabase\')].\"compartment-id\"|[0]"'
+                        )}"""
+        identifier="""${sh(
+                            returnStdout: true,
+                            script: '/usr/local/bin/oci search resource free-text-search --text JSON_ATTACK --raw-output --query "data.items[?contains(\"resource-type\", \'AutonomousDatabase\')].\"identifier\"|[0]"'
+                        )}"""                            
+        dbname="""${sh(
+                            returnStdout: true,
+                            script: '/usr/local/bin/oci db autonomous-database get --autonomous-database-id $identifier --raw-output --query "data.\"db-name\""'
+                        )}"""  
     }   
    stages {
-       stage('variable') {
-            environment {
-                compartment = "${sh(returnStdout:true,script: '--config-file /home/opc/.oci/config search resource free-text-search --text JSON_ATTACK --raw-output --query "data.items[?contains(\"resource-type\", \'AutonomousDatabase\')].\"compartment-id\"|[0]"')}"
-            }
-            steps {
-                echo "AJD compartmentid ${compartmentid}"
-                echo "AJD identifier is ${identifier}"
-                echo "AJD dbname is ${dbname}"
-                sh 'printenv'
-            }
-       }
         stage('Clone Git') {
              steps {
                  // The below will clone your repo and will be checked out to master branch by default.
