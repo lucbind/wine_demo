@@ -6,7 +6,7 @@ pipeline {
         dbname="JSONATTACK"     
         compartmentid="""${sh(
                             returnStdout: true,
-                            script: '/usr/local/bin/oci  --config-file /home/jenkins/.oci/config search resource free-text-search --text JSON_ATTACK --raw-output --query \'"data.items[0].\\"compartment-id\\"\''
+                            script: '/usr/local/bin/oci  --config-file /home/jenkins/.oci/config search resource free-text-search --text JSON_ATTACK --raw-output --query "data.items[0]" |awk -F \\" \'{ if ($2==\"compartment-id\") print $4}\''
                         )}"""
 /*
         identifier="""${sh(
