@@ -45,7 +45,7 @@ pipeline {
                     // 5 minuti
                     timeout(time: 300, unit: 'SECONDS') {
                         waitUntil {
-                            def output =  sh '/usr/local/bin/oci --config-file /home/jenkins/.oci/config db autonomous-database get --autonomous-database-id $identifier_clone --raw-output --query \"data.\"lifecycle-state\"\""'
+                            def output =  sh "/usr/local/bin/oci --config-file /home/jenkins/.oci/config db autonomous-database get --autonomous-database-id $identifier_clone --raw-output --query \"data.\"lifecycle-state\""
                             output == "AVAILABLE"
                          }
                          //
