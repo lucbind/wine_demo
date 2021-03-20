@@ -53,10 +53,11 @@ pipeline {
                          }
                          //
                     } */   
-
-                script {
-
+                environment { 
                     identifier_clone= sh '''/usr/local/bin/oci --config-file /home/jenkins/.oci/config search resource free-text-search --text ${dbname}01 --raw-output --query  "data.items[*].identifier"'''    
+                }
+                script {
+                    //identifier_clone= sh '''/usr/local/bin/oci --config-file /home/jenkins/.oci/config search resource free-text-search --text ${dbname}01 --raw-output --query  "data.items[*].identifier"'''    
                     echo "${identifier_clone}"
                     sh '''/usr/local/bin/oci --config-file /home/jenkins/.oci/config db autonomous-database generate-wallet --file dbwallet.zip --password DataBase##11 --autonomous-database-id  ${identifier_clone}'''
                     }
