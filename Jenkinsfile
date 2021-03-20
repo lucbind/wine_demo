@@ -53,7 +53,7 @@ pipeline {
                          }
                          //
                     } */      
-                    identifier_clone= sh "oci search resource free-text-search --text ${dbname}01 --raw-output --query \"data.items[?contains(\"resource-type\",'AutonomousDatabase')].\"identifier\"|[0]\""     
+                    identifier_clone= sh "oci search resource free-text-search --text ${dbname}01 --raw-output --query \"data.items[?contains(\"resource-type\",\'AutonomousDatabase\')].\"identifier\"|[0]\""     
                     sh "/usr/local/bin/oci --config-file /home/jenkins/.oci/config db autonomous-database generate-wallet --autonomous-database-id $identifier_clone --file dbwallet.zip --password DataBase##11"
                 }  
         }     
