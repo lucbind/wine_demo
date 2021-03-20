@@ -6,7 +6,7 @@ pipeline {
         dbname="JSONATTACK"     
         compartmentid="""${sh(
                             returnStdout: true,
-                            script: '/usr/local/bin/oci  --config-file /home/jenkins/.oci/config search resource free-text-search --text JSON_ATTACK --raw-output --query "data.items[0]?contains('"resource-type"', \'AutonomousDatabase\')].\"compartment-id\"|[0]"'
+                            script: '/usr/local/bin/oci  --config-file /home/jenkins/.oci/config search resource free-text-search --text JSON_ATTACK --raw-output --query "data.items[0].\"compartment-id\""'
                         )}"""
 /*
         identifier="""${sh(
