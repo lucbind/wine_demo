@@ -46,18 +46,33 @@ pipeline {
         }
         
         stage('Get Wallet') {
-            when {
+                waitUntil {
+                        script {
+                            oci db autonomous-database get --autonomous-database-id $identifier_clone --raw-output --query "data.\"lifecycle-state\"", returnStdout:'AVAILABLE'
+                            return (r == 0);
+                        }
+                steps {
+                    sh "pwd"                
+                    sh "oci db autonomous-database generate-wallet --autonomous-database-id $identifier_clone --file dbwallet.zip --password DataBase##11"
+                    }  
+                }  
+            }            
+
+/*        stage('Get Wallet') {
+             when {
                    status_clone="""${sh(
                             returnStdout: true,
                             script: 'oci db autonomous-database get --autonomous-database-id $identifier_clone --raw-output --query "data.\"lifecycle-state\""'
                         )}"""  
                  environment(name: 'status_clone', value: 'AVAILABLE')
+                 expression { status_clone== 'AVAILABLE' }
               }
             steps {
             sh "pwd"                
             sh "oci db autonomous-database generate-wallet --autonomous-database-id $identifier_clone --file dbwallet.zip --password DataBase##11"
             }    
         } 
+ */
         stage('Build docker image') {
         /* This stage builds the actual image; synonymous to  docker build on the command line */
             steps {
