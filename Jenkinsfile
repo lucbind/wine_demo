@@ -11,7 +11,7 @@ pipeline {
           }  
     }   
 
-    environment ('Set Variable database') {
+    environment  {
         // variabili per identificare l'autonomous  
         compartmentid="""${sh(
                             returnStdout: true,
