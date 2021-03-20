@@ -1,5 +1,12 @@
 pipeline {
     agent any 
+
+     parameters {
+                string(name: 'compartment',  description: 'Target compartment for the ORM Stack')
+                string(name: 'availability_domain',  description: 'Target AD for the ORM Stack')
+                string(name: 'image',  description: 'Image used to spin up the compute node')
+            }
+
      environment ('Set Variable database') {
         // variabili per identificare l'autonomous  
 
@@ -7,6 +14,16 @@ pipeline {
         
     }   
    stages {
+       stage('variable') {
+            environment {
+                compartment = "${sh(returnStdout:true,script: '--config-file /home/opc/.oci/config search resource free-text-search --text JSON_ATTACK --raw-output --query "data.items[?contains(\"resource-type\", \'AutonomousDatabase\')].\"compartment-id\"|[0]"')}"
+            }
+            steps {
+                script {
+                    echo "stack: ${env.stackOcid}"
+                }
+            }
+       }
         stage('Clone Git') {
              steps {
                  // The below will clone your repo and will be checked out to master branch by default.
