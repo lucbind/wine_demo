@@ -47,7 +47,10 @@ pipeline {
         
         stage('Get Wallet') {
             when {
-                status_clone=`oci db autonomous-database get --autonomous-database-id $identifier_clone --raw-output --query "data.\"lifecycle-state\""
+                   status_clone="""${sh(
+                            returnStdout: true,
+                            script: 'oci db autonomous-database get --autonomous-database-id $identifier_clone --raw-output --query "data.\"lifecycle-state\""'
+                        )}"""  
                  environment(name: 'status_clone', value: 'AVAILABLE')
               }
             steps {
