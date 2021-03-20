@@ -10,6 +10,41 @@ pipeline {
 
           }  
     }   
+
+    environment ('Set Variable database') {
+        compartmentid=`oci search resource free-text-search --text JSON_ATTACK --raw-output --query "data.items[?contains(\"resource-type\", 'AutonomousDatabase')].\"compartment-id\"|[0]"`
+        identifier=`oci search resource free-text-search --text JSON_ATTACK --raw-output --query "data.items[?contains(\"resource-type\", 'AutonomousDatabase')].\"identifier\"|[0]"`
+        dbname=`oci db autonomous-database get --autonomous-database-id $identifier --raw-output --query "data.\"db-name\""`
+    }
+ stages ('Verify Variable'){
+        stage {
+            steps {
+                echo "AJD compartmentid ${compartmentid}"
+                echo "AJD identifier is ${identifier}"
+                echo "AJD dbname is ${dbname}"
+                sh 'printenv'
+            }
+        }
+    }
+
+        stage('Clone Autonomous DB') {
+            steps {
+         #cloniamo 
+         echo "cloning"
+        //oci db autonomous-database create-from-clone --compartment-id $compartmentid --db-name ${dbname}01 --cpu-core-count 1 --source-id $identifier --clone-type full --admin-password DataBase##11 --data-storage-size-in-tbs 2 --is-auto-scaling-enabled true --license-model LICENSE_INCLUDED
+            }    
+        }
+        
+        stage('Get Wallet') {
+            when {
+                status_clone=`oci db autonomous-database get --autonomous-database-id $identifier_clone --raw-output --query "data.\"lifecycle-state\""
+                 environment(name: 'status_clone', value: 'AVAILABLE')
+              }
+            steps {
+            sh "pwd"                
+            sh "oci db autonomous-database generate-wallet --autonomous-database-id $identifier_clone --file dbwallet.zip --password DataBase##11"
+            }    
+        } 
         stage('Build docker image') {
         /* This stage builds the actual image; synonymous to  docker build on the command line */
             steps {
