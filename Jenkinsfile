@@ -1,16 +1,6 @@
 pipeline {
     agent any 
-   stages {
-    stage('Clone Git') {
-        steps {
-           // The below will clone your repo and will be checked out to master branch by default.
-            //  git config --global credential.username lucabind
-            //  git config --global credential.helper "Oneiros!973"
-              git url: 'https://github.com/lucbind/wine_demo.git'
-
-          }  
-    }   
-    environment ('Set Variable database') {
+     environment ('Set Variable database') {
         // variabili per identificare l'autonomous  
         compartmentid="""${sh(
                             returnStdout: true,
@@ -24,7 +14,18 @@ pipeline {
                             returnStdout: true,
                             script: 'oci db autonomous-database get --autonomous-database-id $identifier --raw-output --query "data.\"db-name\""'
                         )}"""  
-    }
+    }   
+   stages {
+    stage('Clone Git') {
+        steps {
+           // The below will clone your repo and will be checked out to master branch by default.
+            //  git config --global credential.username lucabind
+            //  git config --global credential.helper "Oneiros!973"
+              git url: 'https://github.com/lucbind/wine_demo.git'
+
+          }  
+    }   
+
  stage ('Verify Variable'){
             steps {
                 echo "AJD compartmentid ${compartmentid}"
