@@ -10,7 +10,7 @@ pipeline {
 
           }  
     }   
- stages ('Verify Variable'){
+ stage ('Verify Variable'){
             steps {
                 echo "AJD compartmentid ${compartmentid}"
                 echo "AJD identifier is ${identifier}"
