@@ -2,6 +2,10 @@ pipeline {
     agent any 
      environment ('Set Variable database') {
         // variabili per identificare l'autonomous  
+        compartmentid="ocid1.compartment.oc1..aaaaaaaagy2e2ixqkhyyy2sp3dfguaabkz6oe55bxuh2pldev7ozbmeiiczq"
+        identifier="ocid1.autonomousdatabase.oc1.eu-frankfurt-1.abtheljserxr32aqe7al6ppxi5kl3vd3zzfftvo34fuk6jogqf6l2t5mxweq"
+        dbname="event01"
+/*        
         compartmentid="""${sh(
                             returnStdout: true,
                             script: '/usr/local/bin/oci  --config-file /home/opc/.oci/config search resource free-text-search --text JSON_ATTACK --raw-output --query "data.items[?contains(\"resource-type\", \'AutonomousDatabase\')].\"compartment-id\"|[0]"'
@@ -10,10 +14,7 @@ pipeline {
                             returnStdout: true,
                             script: '/usr/local/bin/oci --config-file /home/opc/.oci/config search resource free-text-search --text JSON_ATTACK --raw-output --query "data.items[?contains(\"resource-type\", \'AutonomousDatabase\')].\"identifier\"|[0]"'
                         )}"""                            
-        dbname="""${sh(
-                            returnStdout: true,
-                            script: '/usr/local/bin/oci --config-file /home/opc/.oci/config db autonomous-database get --autonomous-database-id $identifier --raw-output --query "data.\"db-name\""'
-                        )}"""  
+*/
     }   
    stages {
         stage('Clone Git') {
