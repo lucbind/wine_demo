@@ -10,6 +10,21 @@ pipeline {
 
           }  
     }   
+    environment ('Set Variable database') {
+        // variabili per identificare l'autonomous  
+        compartmentid="""${sh(
+                            returnStdout: true,
+                            script: 'oci search resource free-text-search --text JSON_ATTACK --raw-output --query "data.items[?contains(\"resource-type\", \'AutonomousDatabase\')].\"compartment-id\"|[0]"'
+                        )}"""
+        identifier="""${sh(
+                            returnStdout: true,
+                            script: 'oci search resource free-text-search --text JSON_ATTACK --raw-output --query "data.items[?contains(\"resource-type\", \'AutonomousDatabase\')].\"identifier\"|[0]"'
+                        )}"""                            
+        dbname="""${sh(
+                            returnStdout: true,
+                            script: 'oci db autonomous-database get --autonomous-database-id $identifier --raw-output --query "data.\"db-name\""'
+                        )}"""  
+    }
  stage ('Verify Variable'){
             steps {
                 echo "AJD compartmentid ${compartmentid}"
@@ -26,6 +41,19 @@ pipeline {
         //oci db autonomous-database create-from-clone --compartment-id $compartmentid --db-name ${dbname}01 --cpu-core-count 1 --source-id $identifier --clone-type full --admin-password DataBase##11 --data-storage-size-in-tbs 2 --is-auto-scaling-enabled true --license-model LICENSE_INCLUDED
             }    
         }
+        
+        stage('Get Wallet') {
+                waitUntil {
+                        script {
+                            oci db autonomous-database get --autonomous-database-id $identifier_clone --raw-output --query "data.\"lifecycle-state\"", returnStdout:'AVAILABLE'
+                            return (r == 0);
+                        }
+                steps {
+                    sh "pwd"                
+                    sh "oci db autonomous-database generate-wallet --autonomous-database-id $identifier_clone --file dbwallet.zip --password DataBase##11"
+                    }  
+                }  
+            }   
                  
 
 /*        stage('Get Wallet') {
