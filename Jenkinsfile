@@ -42,8 +42,7 @@ pipeline {
         }
 
        
-        stage('Get Wallet') {
-                steps {       
+        stage('Get Wallet') {       
                     /*      
                     // 5 minuti
                     timeout(time: 300, unit: 'SECONDS') {
@@ -59,6 +58,7 @@ pipeline {
                                              script: '/usr/local/bin/oci --config-file /home/jenkins/.oci/config search resource free-text-search --text ${dbname}01 --raw-output --query  "data.items[*].identifier"' 
                                         )}"""
                 }
+                steps {
                 script {
                     //identifier_clone= sh '''/usr/local/bin/oci --config-file /home/jenkins/.oci/config search resource free-text-search --text ${dbname}01 --raw-output --query  "data.items[*].identifier"'''    
                     echo "${identifier_clone}"
