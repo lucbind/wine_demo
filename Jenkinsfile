@@ -12,14 +12,14 @@ pipeline {
     }   
 
     environment ('Set Variable database') {
-        // variabili per identificare l'autonomous
+        // variabili per identificare l'autonomous  
         compartmentid="""${sh(
                             returnStdout: true,
-                            script: 'oci search resource free-text-search --text JSON_ATTACK --raw-output --query "data.items[?contains(\"resource-type\", 'AutonomousDatabase')].\"compartment-id\"|[0]"'
+                            script: 'oci search resource free-text-search --text JSON_ATTACK --raw-output --query "data.items[?contains(\"resource-type\", \'AutonomousDatabase\')].\"compartment-id\"|[0]"'
                         )}"""
         identifier="""${sh(
                             returnStdout: true,
-                            script: 'oci search resource free-text-search --text JSON_ATTACK --raw-output --query "data.items[?contains(\"resource-type\", 'AutonomousDatabase')].\"identifier\"|[0]"'
+                            script: 'oci search resource free-text-search --text JSON_ATTACK --raw-output --query "data.items[?contains(\"resource-type\", \'AutonomousDatabase\')].\"identifier\"|[0]"'
                         )}"""                            
         dbname="""${sh(
                             returnStdout: true,
