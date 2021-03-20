@@ -11,21 +11,7 @@ pipeline {
           }  
     }   
 
-    environment  {
-        // variabili per identificare l'autonomous  
-        compartmentid="""${sh(
-                            returnStdout: true,
-                            script: 'oci search resource free-text-search --text JSON_ATTACK --raw-output --query "data.items[?contains(\"resource-type\", \'AutonomousDatabase\')].\"compartment-id\"|[0]"'
-                        )}"""
-        identifier="""${sh(
-                            returnStdout: true,
-                            script: 'oci search resource free-text-search --text JSON_ATTACK --raw-output --query "data.items[?contains(\"resource-type\", \'AutonomousDatabase\')].\"identifier\"|[0]"'
-                        )}"""                            
-        dbname="""${sh(
-                            returnStdout: true,
-                            script: 'oci db autonomous-database get --autonomous-database-id $identifier --raw-output --query "data.\"db-name\""'
-                        )}"""  
-    }
+
  stages ('Verify Variable'){
         stage {
             steps {
