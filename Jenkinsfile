@@ -37,10 +37,8 @@ pipeline {
             steps {
                 //#cloniamo 
                 echo "cloning"
-                //sh "/usr/local/bin/oci  db autonomous-database create-from-clone --compartment-id $compartmentid --db-name ${dbname}01 --cpu-core-count 1 --source-id $identifier --clone-type full --admin-password DataBase##11 --data-storage-size-in-tbs 2 --is-auto-scaling-enabled true --license-model LICENSE_INCLUDED"
-                //sh "ls -lrta /home/opc/.oci/"
-                sh "id"
-                
+                //sh "/usr/local/bin/oci  --config-file /home/jenkins/.oci/config  db autonomous-database create-from-clone --compartment-id $compartmentid --db-name ${dbname}01 --cpu-core-count 1 --source-id $identifier --clone-type full --admin-password DataBase##11 --data-storage-size-in-tbs 2 --is-auto-scaling-enabled true --license-model LICENSE_INCLUDED"
+                sh "ls -lrta /home/opc/.oci/"
             }    
         }
         stage('Get Wallet') {
@@ -49,12 +47,12 @@ pipeline {
                     timeout(time: 300, unit: 'SECONDS') {
                         waitUntil {
                             script {
-                                sh "/usr/local/bin/oci db autonomous-database get --autonomous-database-id $identifier_clone --raw-output --query \"data.\"lifecycle-state\"\"", returnStdout:'AVAILABLE'
+                                sh "/usr/local/bin/oci --config-file /home/jenkins/.oci/config db autonomous-database get --autonomous-database-id $identifier_clone --raw-output --query \"data.\"lifecycle-state\"\"", returnStdout:'AVAILABLE'
                                 return (r == 0);
                              }
                         }
                     }               
-                    sh "oci db autonomous-database generate-wallet --autonomous-database-id $identifier_clone --file dbwallet.zip --password DataBase##11"
+                    sh "oci --config-file /home/jenkins/.oci/config db autonomous-database generate-wallet --autonomous-database-id $identifier_clone --file dbwallet.zip --password DataBase##11"
                 }  
         }     
                  
