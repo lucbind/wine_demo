@@ -16,45 +16,43 @@ pipeline {
                         )}"""  
     }   
    stages {
-    stage('Clone Git') {
-        steps {
-           // The below will clone your repo and will be checked out to master branch by default.
-            //  git config --global credential.username lucabind
-            //  git config --global credential.helper "Oneiros!973"
+        stage('Clone Git') {
+             steps {
+                 // The below will clone your repo and will be checked out to master branch by default.
+                 //  git config --global credential.username lucabind
+                 //  git config --global credential.helper "Oneiros!973"
               git url: 'https://github.com/lucbind/wine_demo.git'
-
-          }  
-    }   
-
- stage ('Verify Variable'){
+             }  
+        }   
+        stage ('Verify Variable'){
             steps {
                 echo "AJD compartmentid ${compartmentid}"
                 echo "AJD identifier is ${identifier}"
                 echo "AJD dbname is ${dbname}"
                 sh 'printenv'
             }
-    }
-
+        }
         stage('Clone Autonomous DB') {
             steps {
-         //#cloniamo 
-         echo "cloning"
-        //oci db autonomous-database create-from-clone --compartment-id $compartmentid --db-name ${dbname}01 --cpu-core-count 1 --source-id $identifier --clone-type full --admin-password DataBase##11 --data-storage-size-in-tbs 2 --is-auto-scaling-enabled true --license-model LICENSE_INCLUDED
+                //#cloniamo 
+                echo "cloning"
+                //oci db autonomous-database create-from-clone --compartment-id $compartmentid --db-name ${dbname}01 --cpu-core-count 1 --source-id $identifier --clone-type full --admin-password DataBase##11 --data-storage-size-in-tbs 2 --is-auto-scaling-enabled true --license-model LICENSE_INCLUDED
             }    
         }
-        
         stage('Get Wallet') {
-                waitUntil {
-                        script {
-                            oci db autonomous-database get --autonomous-database-id $identifier_clone --raw-output --query "data.\"lifecycle-state\"", returnStdout:'AVAILABLE'
-                            return (r == 0);
+                steps {             
+                    // 5 minuti
+                    timeout(time: 300, unit: 'SECONDS') {
+                        waitUntil {
+                            script {
+                                oci db autonomous-database get --autonomous-database-id $identifier_clone --raw-output --query "data.\"lifecycle-state\"", returnStdout:'AVAILABLE'
+                                return (r == 0);
+                             }
                         }
-                steps {
-                    sh "pwd"                
+                    }               
                     sh "oci db autonomous-database generate-wallet --autonomous-database-id $identifier_clone --file dbwallet.zip --password DataBase##11"
-                    }  
                 }  
-            }   
+        }     
                  
 
 /*        stage('Get Wallet') {
