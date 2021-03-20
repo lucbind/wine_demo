@@ -2,18 +2,15 @@ pipeline {
     agent any 
      environment ('Set Variable database') {
         // variabili per identificare l'autonomous  
-        identifier="ocid1.autonomousdatabase.oc1.eu-frankfurt-1.abtheljserxr32aqe7al6ppxi5kl3vd3zzfftvo34fuk6jogqf6l2t5mxweq"
         dbname="JSONATTACK"     
         compartmentid="""${sh(
                             returnStdout: true,
                             script: '/usr/local/bin/oci  --config-file /home/jenkins/.oci/config search resource free-text-search --text JSON_ATTACK --raw-output --query "data.items[0]" |awk -F \\" \'{ if ($2==\"compartment-id\") print $4}\''
                         )}"""
-/*
         identifier="""${sh(
                             returnStdout: true,
-                            script: '/usr/local/bin/oci --config-file /home/opc/.oci/config search resource free-text-search --text JSON_ATTACK --raw-output --query "data.items[?contains(\"resource-type\", \'AutonomousDatabase\')].\"identifier\"|[0]"'
+                            script: '/usr/local/bin/oci --config-file /home/jenkins/.oci/config search resource free-text-search --text JSON_ATTACK --raw-output --query "data.items[0].identifier"'
                         )}"""                            
-*/
     }   
    stages {
         stage('Clone Git') {
@@ -33,10 +30,21 @@ pipeline {
             }
         }
         stage('Clone Autonomous DB') {
+                environment { 
+                      identifier_clone = """${sh(
+                                            returnStdout: true,
+                                             script: '/usr/local/bin/oci --config-file /home/jenkins/.oci/config search resource free-text-search --text ${dbname}01 --raw-output --query  "data.items[0].identifier"' 
+                                        )}"""
+                }
+                
             steps {
-                //#cloniamo 
-                echo "cloning"
-                //sh "/usr/local/bin/oci  --config-file /home/jenkins/.oci/config  db autonomous-database create-from-clone --compartment-id $compartmentid --db-name ${dbname}01 --cpu-core-count 1 --source-id $identifier --clone-type full --admin-password DataBase##11 --data-storage-size-in-tbs 2 --is-auto-scaling-enabled true --license-model LICENSE_INCLUDED"
+                if (identifier_clone) {
+                     //#cloniamo 
+                     echo "Create clone that is not present "
+                     sh "/usr/local/bin/oci  --config-file /home/jenkins/.oci/config  db autonomous-database create-from-clone --compartment-id $compartmentid --db-name ${dbname}01 --cpu-core-count 1 --source-id $identifier --clone-type full --admin-password DataBase##11 --data-storage-size-in-tbs 2 --is-auto-scaling-enabled true --license-model LICENSE_INCLUDED"
+                } else {
+                     echo "Clone present not execute cloning task"
+                }
             }    
         }
 
