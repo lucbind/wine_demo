@@ -54,7 +54,10 @@ pipeline {
                          //
                     } */   
                 environment { 
-                    identifier_clone= sh '''/usr/local/bin/oci --config-file /home/jenkins/.oci/config search resource free-text-search --text ${dbname}01 --raw-output --query  "data.items[*].identifier"'''    
+                      identifier_clone = """${sh(
+                                            returnStdout: true,
+                                             sh '''/usr/local/bin/oci --config-file /home/jenkins/.oci/config search resource free-text-search --text ${dbname}01 --raw-output --query  "data.items[*].identifier"''' 
+                                        )}"""
                 }
                 script {
                     //identifier_clone= sh '''/usr/local/bin/oci --config-file /home/jenkins/.oci/config search resource free-text-search --text ${dbname}01 --raw-output --query  "data.items[*].identifier"'''    
