@@ -60,33 +60,14 @@ pipeline {
                 }
                 steps {
                 script {
-                    //identifier_clone= sh '''/usr/local/bin/oci --config-file /home/jenkins/.oci/config search resource free-text-search --text ${dbname}01 --raw-output --query  "data.items[*].identifier"'''    
-                    echo "${identifier_clone}"
                     sh '''/usr/local/bin/oci --config-file /home/jenkins/.oci/config db autonomous-database generate-wallet --file dbwallet.zip --password DataBase##11 --autonomous-database-id  ${identifier_clone}'''
                     }
                 }  
         }     
                
-
-/*        stage('Get Wallet') {
-             when {
-                   status_clone="""${sh(
-                            returnStdout: true,
-                            script: 'oci db autonomous-database get --autonomous-database-id $identifier_clone --raw-output --query "data.\"lifecycle-state\""'
-                        )}"""  
-                 environment(name: 'status_clone', value: 'AVAILABLE')
-                 expression { status_clone== 'AVAILABLE' }
-              }
-            steps {
-            sh "pwd"                
-            sh "oci db autonomous-database generate-wallet --autonomous-database-id $identifier_clone --file dbwallet.zip --password DataBase##11"
-            }    
-        } 
- */
         stage('Build docker image') {
         /* This stage builds the actual image; synonymous to  docker build on the command line */
             steps {
-            sh "/usr/local/bin/oci --config-file /home/jenkins/.oci/config db autonomous-database generate-wallet --autonomous-database-id $identifier_clone --file dbwallet.zip --password DataBase##11"
             sh "sudo docker build json-in-db-master/WineDemo/. -t windemo:1"
             //sh "docker build /var/lib/jenkins/workspace/wine_demo_master/json-in-db-master/WineDemo/. -t windemo:1"
             }    
