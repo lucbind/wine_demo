@@ -24,7 +24,6 @@ pipeline {
                 echo "AJD dbname is ${dbname}"
                 sh 'printenv'
             }
-            }
        }
         stage('Clone Git') {
              steps {
