@@ -19,9 +19,11 @@ pipeline {
                 compartment = "${sh(returnStdout:true,script: '--config-file /home/opc/.oci/config search resource free-text-search --text JSON_ATTACK --raw-output --query "data.items[?contains(\"resource-type\", \'AutonomousDatabase\')].\"compartment-id\"|[0]"')}"
             }
             steps {
-                script {
-                    echo  "${compartmentid}"
-                }
+                echo "AJD compartmentid ${compartmentid}"
+                echo "AJD identifier is ${identifier}"
+                echo "AJD dbname is ${dbname}"
+                sh 'printenv'
+            }
             }
        }
         stage('Clone Git') {
