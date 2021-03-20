@@ -11,14 +11,12 @@ pipeline {
           }  
     }   
  stages ('Verify Variable'){
-        stage {
             steps {
                 echo "AJD compartmentid ${compartmentid}"
                 echo "AJD identifier is ${identifier}"
                 echo "AJD dbname is ${dbname}"
                 sh 'printenv'
             }
-        }
     }
 
         stage('Clone Autonomous DB') {
