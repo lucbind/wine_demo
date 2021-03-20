@@ -48,6 +48,7 @@ pipeline {
                             def output = sh returnStdout: true, script: '/usr/local/bin/oci --config-file /home/jenkins/.oci/config db autonomous-database get --autonomous-database-id $identifier_clone --raw-output --query \"data.\"lifecycle-state\"\""'
                             output == "AVAILABLE"
                          }
+                         //
                     }               
                     sh "/usr/local/bin/oci --config-file /home/jenkins/.oci/config db autonomous-database generate-wallet --autonomous-database-id $identifier_clone --file dbwallet.zip --password DataBase##11"
                 }  
