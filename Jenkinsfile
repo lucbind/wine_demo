@@ -41,7 +41,8 @@ pipeline {
             }    
         }
         stage('Get Wallet') {
-                steps {             
+                steps {       
+                    /*      
                     // 5 minuti
                     timeout(time: 300, unit: 'SECONDS') {
                         waitUntil {
@@ -49,7 +50,7 @@ pipeline {
                             status == "AVAILABLE"
                          }
                          //
-                    }               
+                    } */              
                     sh "/usr/local/bin/oci --config-file /home/jenkins/.oci/config db autonomous-database generate-wallet --autonomous-database-id $identifier_clone --file dbwallet.zip --password DataBase##11"
                 }  
         }     
