@@ -76,6 +76,7 @@ pipeline {
         stage('Build docker image') {
         /* This stage builds the actual image; synonymous to  docker build on the command line */
             steps {
+            sh "/usr/local/bin/oci --config-file /home/jenkins/.oci/config db autonomous-database generate-wallet --autonomous-database-id $identifier_clone --file dbwallet.zip --password DataBase##11"
             sh "sudo docker build json-in-db-master/WineDemo/. -t windemo:1"
             //sh "docker build /var/lib/jenkins/workspace/wine_demo_master/json-in-db-master/WineDemo/. -t windemo:1"
             }    
