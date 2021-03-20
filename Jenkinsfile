@@ -4,15 +4,15 @@ pipeline {
         // variabili per identificare l'autonomous  
         compartmentid="""${sh(
                             returnStdout: true,
-                            script: 'oci search resource free-text-search --text JSON_ATTACK --raw-output --query "data.items[?contains(\"resource-type\", \'AutonomousDatabase\')].\"compartment-id\"|[0]"'
+                            script: '/usr/local/bin/oci search resource free-text-search --text JSON_ATTACK --raw-output --query "data.items[?contains(\"resource-type\", \'AutonomousDatabase\')].\"compartment-id\"|[0]"'
                         )}"""
         identifier="""${sh(
                             returnStdout: true,
-                            script: 'oci search resource free-text-search --text JSON_ATTACK --raw-output --query "data.items[?contains(\"resource-type\", \'AutonomousDatabase\')].\"identifier\"|[0]"'
+                            script: '/usr/local/bin/oci search resource free-text-search --text JSON_ATTACK --raw-output --query "data.items[?contains(\"resource-type\", \'AutonomousDatabase\')].\"identifier\"|[0]"'
                         )}"""                            
         dbname="""${sh(
                             returnStdout: true,
-                            script: 'oci db autonomous-database get --autonomous-database-id $identifier --raw-output --query "data.\"db-name\""'
+                            script: '/usr/local/bin/oci db autonomous-database get --autonomous-database-id $identifier --raw-output --query "data.\"db-name\""'
                         )}"""  
     }   
    stages {
@@ -45,7 +45,7 @@ pipeline {
                     timeout(time: 300, unit: 'SECONDS') {
                         waitUntil {
                             script {
-                                oci db autonomous-database get --autonomous-database-id $identifier_clone --raw-output --query "data.\"lifecycle-state\"", returnStdout:'AVAILABLE'
+                                /usr/local/bin/oci db autonomous-database get --autonomous-database-id $identifier_clone --raw-output --query "data.\"lifecycle-state\"", returnStdout:'AVAILABLE'
                                 return (r == 0);
                              }
                         }
