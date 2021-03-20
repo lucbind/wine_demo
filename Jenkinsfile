@@ -20,7 +20,7 @@ pipeline {
             }
             steps {
                 script {
-                    echo "stack: ${env.stackOcid}"
+                    echo "compartment: ${env.compartment}"
                 }
             }
        }
