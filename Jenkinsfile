@@ -4,7 +4,7 @@ pipeline {
         // variabili per identificare l'autonomous  
         compartmentid="""${sh(
                             returnStdout: true,
-                            script: '/usr/local/bin/oci search resource free-text-search --text JSON_ATTACK --raw-output --query "data.items[?contains(\"resource-type\", \'AutonomousDatabase\')].\"compartment-id\"|[0]"'
+                            script: '/usr/local/bin/oci --config-file /home/opc/.oci/config search resource free-text-search --text JSON_ATTACK --raw-output --query "data.items[?contains(\"resource-type\", \'AutonomousDatabase\')].\"compartment-id\"|[0]"'
                         )}"""
     }   
    stages {
