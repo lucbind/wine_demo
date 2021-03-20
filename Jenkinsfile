@@ -20,7 +20,7 @@ pipeline {
             }
             steps {
                 script {
-                    echo "compartment: ${env.compartment}"
+                    echo  "${compartmentid}"
                 }
             }
        }
