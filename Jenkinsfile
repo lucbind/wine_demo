@@ -13,7 +13,7 @@ pipeline {
         stage('Build docker image') {
         /* This stage builds the actual image; synonymous to  docker build on the command line */
             steps {
-                //trys
+                //trysd
             sh "pwd"                
             //sh "cd json-in-db-master/WineDemo"
             sh "sudo docker build json-in-db-master/WineDemo/. -t windemo:1"
