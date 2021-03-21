@@ -61,8 +61,8 @@ pipeline {
                         // 10 minuti  
                 steps {
                // timeout(time: 600, unit: 'SECONDS') {
+ /*
                 timeout(time: 30, unit: 'SECONDS') {
-/*
                         waitUntil {
                             script {
                             def status = """${sh(
@@ -72,20 +72,16 @@ pipeline {
                             println "Waiting for clone AJD in status AVAILABLE but it is :  x" + status +"x"
                             return (status == 'AVAILABLE');
                          }
-                        }
-*/                        
-                        while (status != 'AVAILABLE') {
-                            script {
-                            def status = """${sh(
-                                            returnStdout: true,
-                                            script: '/usr/local/bin/oci --config-file /home/jenkins/.oci/config db autonomous-database get --autonomous-database-id ${identifier} --raw-output --query \"data\"|awk -F \\" \'{ if ($2==\"lifecycle-state\") print $4}\''                            
-                                        )}"""
-                            println "Waiting for clone AJD in status AVAILABLE but it is :  x" + status +"x"
-                         }
-                        }
-
-                }                      
+                        }                      
+                } 
+*/                       
                 script {
+                    while(status=='AVAILABLE'){
+                    def status = """${sh(
+                                    returnStdout: true,
+                                    script: '/usr/local/bin/oci --config-file /home/jenkins/.oci/config db autonomous-database get --autonomous-database-id ${identifier} --raw-output --query \"data\"|awk -F \\" \'{ if ($2==\"lifecycle-state\") print $4}\''                            
+                                )}"""    
+                    }
                     sh '''/usr/local/bin/oci --config-file /home/jenkins/.oci/config db autonomous-database generate-wallet --file dbwallet.zip --password DataBase##11 --autonomous-database-id  ${identifier_clone}'''
                     }
                 }  
