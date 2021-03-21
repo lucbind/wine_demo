@@ -62,24 +62,16 @@ pipeline {
                 steps {
                // timeout(time: 600, unit: 'SECONDS') {
                 timeout(time: 30, unit: 'SECONDS') {
-/*
+
                         waitUntil {
                             script {
                             def status = """${sh(
                                             returnStdout: true,
-                                            script: '/usr/local/bin/oci --config-file /home/jenkins/.oci/config db autonomous-database get --autonomous-database-id ${identifier} --raw-output --query \"data\"|awk -F \\" \'{ if ($2==\"lifecycle-state\") print $4}\''                              
+                                            script: '/usr/local/bin/oci --config-file /home/jenkins/.oci/config db autonomous-database get --autonomous-database-id ${identifier} --raw-output --query \"data\"|awk -F \\" \'{ if ($2==\"lifecycle-state\") print $4}\'',
+                                            returnStatus: true                            
                                         )}"""
                             println "Waiting for clone AJD in status AVAILABLE but it is :  x" + status +"x"
                              return (status == 'AVAILABLE');
-                         }
-                        }
-*/
-                        waitForCond {
-                            script {
-                            'AVAILABLE' == """${sh(
-                                            returnStdout: true,
-                                            script: '/usr/local/bin/oci --config-file /home/jenkins/.oci/config db autonomous-database get --autonomous-database-id ${identifier} --raw-output --query \"data\"|awk -F \\" \'{ if ($2==\"lifecycle-state\") print $4}\''                              
-                                        )}"""
                          }
                         }
                 }                      
