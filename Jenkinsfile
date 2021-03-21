@@ -52,8 +52,8 @@ pipeline {
 
        
         stage('Get Wallet') {       
-                        // 5 minuti
-                    timeout(time: 300, unit: 'SECONDS') {
+                        // 10 minuti
+                    timeout(time: 600, unit: 'SECONDS') {
                         waitUntil {
                             status = """${sh(
                                             returnStdout: true,
