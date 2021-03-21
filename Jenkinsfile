@@ -76,7 +76,7 @@ pipeline {
 */
                         waitForCond {
                             script {
-                            'AVAILABLE' = """${sh(
+                            'AVAILABLE' == """${sh(
                                             returnStdout: true,
                                             script: '/usr/local/bin/oci --config-file /home/jenkins/.oci/config db autonomous-database get --autonomous-database-id ${identifier} --raw-output --query \"data\"|awk -F \\" \'{ if ($2==\"lifecycle-state\") print $4}\''                              
                                         )}"""
