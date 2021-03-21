@@ -52,8 +52,14 @@ pipeline {
 
        
         stage('Get Wallet') {       
+                environment { 
+                      identifier_clone = """${sh(
+                                            returnStdout: true,
+                                             script: '/usr/local/bin/oci --config-file /home/jenkins/.oci/config search resource free-text-search --text ${dbname}01 --raw-output --query  "data.items[0].identifier"' 
+                                        )}"""
+                }
                         // 10 minuti
-                    timeout(time: 600, unit: 'SECONDS') {
+                timeout(time: 600, unit: 'SECONDS') {
                         waitUntil {
                             status = """${sh(
                                             returnStdout: true,
@@ -61,14 +67,8 @@ pipeline {
                                         )}"""
                             status == "AVAILABLE"
                          }
-                         //
-                    } */   
-                environment { 
-                      identifier_clone = """${sh(
-                                            returnStdout: true,
-                                             script: '/usr/local/bin/oci --config-file /home/jenkins/.oci/config search resource free-text-search --text ${dbname}01 --raw-output --query  "data.items[0].identifier"' 
-                                        )}"""
-                }
+
+                }    
                 steps {
                 script {
                     sh '''/usr/local/bin/oci --config-file /home/jenkins/.oci/config db autonomous-database generate-wallet --file dbwallet.zip --password DataBase##11 --autonomous-database-id  ${identifier_clone}'''
