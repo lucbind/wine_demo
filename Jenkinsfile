@@ -58,7 +58,8 @@ pipeline {
                                              script: '/usr/local/bin/oci --config-file /home/jenkins/.oci/config search resource free-text-search --text ${dbname}01 --raw-output --query  "data.items[0].identifier"' 
                                         )}"""
                 }
-                        // 10 minuti
+                        // 10 minuti  
+                steps {
                 timeout(time: 600, unit: 'SECONDS') {
                         waitUntil {
                             status = """${sh(
@@ -68,8 +69,7 @@ pipeline {
                             status == "AVAILABLE"
                          }
 
-                }    
-                steps {
+                }                      
                 script {
                     sh '''/usr/local/bin/oci --config-file /home/jenkins/.oci/config db autonomous-database generate-wallet --file dbwallet.zip --password DataBase##11 --autonomous-database-id  ${identifier_clone}'''
                     }
