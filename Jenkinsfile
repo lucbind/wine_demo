@@ -54,9 +54,7 @@ pipeline {
                         }
                 }
             }
-        }    
-*/
-       
+        }           
         stage('Get Wallet') {       
                 environment { 
                       identifier_clone = """${sh(
