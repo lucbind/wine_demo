@@ -91,7 +91,7 @@ pipeline {
             sh "cp dbwallet.zip json-in-db-master/WineDemo"
             sh "sudo docker build json-in-db-master/WineDemo/. -t windemo:1"
             sh "sudo docker login -u 'emeaseitalysandbox/oracleidentitycloud/luca.bindi@oracle.com' -p 'uASDz34:E0c)4i0uh{m]' eu-frankfurt-1.ocir.io"
-            sh "sudo docker tag winedemo:1 eu-frankfurt-1.ocir.io/emeaseitalysandbox/winedemo:winedemo"
+            sh "sudo docker tag eu-frankfurt-1.ocir.io/emeaseitalysandbox/windemo:1 eu-frankfurt-1.ocir.io/emeaseitalysandbox/winedemo:winedemo"
             sh 'sudo docker push eu-frankfurt-1.ocir.io/emeaseitalysandbox/winedemo:winedemo'
             }    
         } 
