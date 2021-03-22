@@ -118,7 +118,7 @@ rimuove il commento  */
             }    
         } 
     }
-}    
+}     
 //kubectl delete -f /var/lib/jenkins/workspace/wine_demo_master/namespace.yaml
 //kubectl delete -f /var/lib/jenkins/workspace/wine_demo_master/oke_deployment.yaml   
 //kubectl delete secret secret --namespace=namespace-winedemo
