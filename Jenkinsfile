@@ -2,7 +2,8 @@ pipeline {
     agent any 
      environment ('Set Variable database') {
         // variabili per identificare l'autonomous  
-        dbname="JSONATTACK"     
+        dbname="JSONATTACK"    
+        k8s_name_space="wine-demo-namespace"
         compartmentid="""${sh(
                             returnStdout: true,
                             script: '/usr/local/bin/oci  --config-file /home/jenkins/.oci/config search resource free-text-search --text JSON_ATTACK --raw-output --query "data.items[0]" |awk -F \\" \'{ if ($2==\"compartment-id\") print $4}\''
@@ -57,20 +58,19 @@ pipeline {
                                             returnStdout: true,
                                              script: '/usr/local/bin/oci --config-file /home/jenkins/.oci/config search resource free-text-search --text ${dbname}01 --raw-output --query  "data.items[0].identifier"' 
                                         )}"""
-                      corret_status=1
+                      corret_status="AVAILABLE"
                 }
                         // 10 minuti  
                 steps {
                // timeout(time: 600, unit: 'SECONDS') {
                 timeout(time: 30, unit: 'SECONDS') {
-
                         waitUntil {
                             script {
                             def status = """${sh(
                                             returnStdout: true,
-                                            script: '/usr/local/bin/oci --config-file /home/jenkins/.oci/config db autonomous-database get --autonomous-database-id ${identifier_clone} --raw-output --query \"data\"|awk -F \\" \'{ if ($2==\"lifecycle-state\") if ($4==\"AVAILABLE\")  print 1 ; else  print 0}\''                           
+                                            script: '/usr/local/bin/oci --config-file /home/jenkins/.oci/config db autonomous-database get --autonomous-database-id ${identifier_clone} --raw-output --query \"data\"|awk -F \\" \'{ if ($2==\"lifecycle-state\")  print $4 }\''                           
                                         )}"""      
-                            println "Waiting for clone AJD in status "+corret_status+" but it is : ->  " + status +"  <-"
+                            println "Waiting for clone AJD "+ identifier_clone +" in status "+corret_status+" but it is : ->  " + status +"  <-"
                             return  (status == corret_status);
                          }
                         }
@@ -86,8 +86,23 @@ pipeline {
             steps {
             sh "cp dbwallet.zip json-in-db-master/WineDemo"
             sh "sudo docker build json-in-db-master/WineDemo/. -t windemo:1"
-            //sh "docker build /var/lib/jenkins/workspace/wine_demo_master/json-in-db-master/WineDemo/. -t windemo:1"
+            }    
+        } 
+        stage('K8s Create namespace ') {
+        /* This stage builds the actual image; synonymous to  docker build on the command line */
+            steps {
+                  label 'Namespace'
+                  defaultContainer 'jnlp'
+                  yaml """
+                        apiVersion: v1
+                        kind: Namespace
+                        metadata:
+                        name: ${k8s_name_space}
+                    """
             }    
         } 
     }
 }       
+
+kubectl apply -f namespace_rancher_creation.yaml
+
