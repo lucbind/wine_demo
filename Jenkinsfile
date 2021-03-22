@@ -57,6 +57,7 @@ pipeline {
                                             returnStdout: true,
                                              script: '/usr/local/bin/oci --config-file /home/jenkins/.oci/config search resource free-text-search --text ${dbname}01 --raw-output --query  "data.items[0].identifier"' 
                                         )}"""
+                      corret_status="AVAILABLE"
                 }
                         // 10 minuti  
                 steps {
@@ -70,7 +71,7 @@ pipeline {
                                             script: '/usr/local/bin/oci --config-file /home/jenkins/.oci/config db autonomous-database get --autonomous-database-id ${identifier_clone} --raw-output --query \"data\"|awk -F \\" \'{ if ($2==\"lifecycle-state\") print $4}\''                           
                                         )}"""
                             println "Waiting for clone AJD in status AVAILABLE but it is : ->  " + status +"  <-"
-                            return  (status == "AVAILABLE");
+                            return  (status == corret_status);
                          }
                         }
                 }                      
