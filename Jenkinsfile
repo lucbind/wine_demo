@@ -40,7 +40,7 @@ pipeline {
             steps {
                 script {
                     echo "${identifier_clone}"
-                    if (identifier_clone.trim()=="Query returned empty result, no output to show.") {
+                    if (identifier_clone=="Query returned empty result, no output to show.") {
                          //#cloniamo 
                         echo "Create clone because it is not exist "
                         sh '''/usr/local/bin/oci  --config-file /home/jenkins/.oci/config  db autonomous-database create-from-clone --compartment-id ${compartmentid} --db-name ${dbname}01 --cpu-core-count 1 --source-id ${identifier} --clone-type full --admin-password DataBase##11 --data-storage-size-in-tbs 2 --is-auto-scaling-enabled true --display-name CLONEJENK --license-model LICENSE_INCLUDED'''
