@@ -33,8 +33,8 @@ pipeline {
         stage('Clone Autonomous DB') {
                 environment { 
                       identifier_clone = """${sh(
-                                            returnStdout: true,
-                                             script: '/usr/local/bin/oci --config-file /home/jenkins/.oci/config search resource free-text-search --text ${dbname}01 --raw-output --query "data.items[?!(contains(\\"lifecycle-state\\", \'TERMINATED\'))].\"identifier\"|[0]"' 
+                                            returnStatus: true,
+                                            // script: '/usr/local/bin/oci --config-file /home/jenkins/.oci/config search resource free-text-search --text ${dbname}01 --raw-output --query "data.items[?!(contains(\\"lifecycle-state\\", \'TERMINATED\'))].\"identifier\"|[0]"' 
                                         )}"""
                 } 
             steps {
