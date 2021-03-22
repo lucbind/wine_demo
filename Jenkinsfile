@@ -68,11 +68,11 @@ pipeline {
                             script {
                             def status = """${sh(
                                             returnStdout: true,
-                                            script: '/usr/local/bin/oci --config-file /home/jenkins/.oci/config db autonomous-database get --autonomous-database-id ${identifier_clone} --raw-output --query \"data\"|awk -F \\" \'{ if ($2==\"lifecycle-state\")  print $4 }\''                           
+                                            script: '/usr/local/bin/oci --config-file /home/jenkins/.oci/config db autonomous-database get --autonomous-database-id ${identifier_clone} --raw-output --query \"data\"|awk -F \\" \'{ if ($2==\"lifecycle-state\")  print $4 }\'|grep \'AVAILABLE\''                           
                                         )}"""  
-                            println "stampa status : " +   status 
-                           // println "Waiting for clone AJD "+ identifier_clone +" in status "+corret_status+" but it is : ->  " + status +"  <-"
-                            return  (status == corret_status);
+//                            println "stampa status : " +   status 
+//                           // println "Waiting for clone AJD "+ identifier_clone +" in status "+corret_status+" but it is : ->  " + status +"  <-"
+//                            return  (status == "AVAILABLE");
                          }
                         }
                 }                      
