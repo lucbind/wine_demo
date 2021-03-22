@@ -84,7 +84,7 @@ pipeline {
                     }
                 }  
         }     
-  /*             
+ /*           
         stage('Build docker image') {
             steps {
             sh "cp dbwallet.zip json-in-db-master/WineDemo"
@@ -98,13 +98,13 @@ pipeline {
         stage('K8s deploy App ') {
         /* This stage builds the actual image; synonymous to  docker build on the command line */
             steps {
-                sh "sudo kubectl apply -f namespace.yaml"
-                sh "sudo kubectl apply -f oke_deployment.yaml"
+                sh "sudo /usr/local/bin/kubectl apply -f namespace.yaml"
+                sh "sudo /usr/local/bin/kubectl apply -f oke_deployment.yaml"
                 timeout(time: 30, unit: 'SECONDS') {
                         waitUntil {
                             script {
                             def LBIP = """${sh(
-                                            script: 'kubectl get services --namespace=namespace_winedemo | grep \'winedemo\' | awk \'{print $4}\''                         
+                                            script: 'sudo /usr/local/bin/kubectl get services --namespace=namespace_winedemo | grep \'winedemo\' | awk \'{print $4}\''                         
                                             ,returnStdout: true 
                                         )}""" 
                             println "stampa loadbalance_ip : " +   LBIP 
