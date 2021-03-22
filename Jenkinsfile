@@ -73,8 +73,8 @@ pipeline {
                             if (status == corret_status){
                                 println "Waiting for clone AJD in status AVAILABLE but it is : ->  " + status +"  <-"
                             }  else{
-  println("Not equal")；
-}
+                                println "Waiting for clone AJD in status AVAILABLE but it is : ->  " + status +"  <-"
+                            }
                             /*          
                             println "Waiting for clone AJD in status AVAILABLE but it is : ->  " + status +"  <-"
                             return  (status == corret_status);
