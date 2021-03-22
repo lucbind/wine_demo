@@ -94,7 +94,7 @@ pipeline {
             sh 'sudo docker push eu-frankfurt-1.ocir.io/emeaseitalysandbox/winedemo:winedemo'
             }    
         } 
-rimuove il commento */
+rimuove il commento  */
         stage('K8s deploy App ') {
         /* This stage builds the actual image; synonymous to  docker build on the command line */
             steps {
