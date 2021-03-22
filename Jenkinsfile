@@ -98,7 +98,7 @@ rimuove il commento  */
         stage('K8s deploy App ') {
         /* This stage builds the actual image; synonymous to  docker build on the command line */
             steps {
-                sh 'sudo runuser -l opc -c "kubectl create secret docker-registry secret --docker-server=eu-frankfurt-1.ocir.io --docker-username=\'emeaseitalysandbox/oracleidentitycloud/luca.bindi@oracle.com\' --docker-password=\'uASDz34:E0c)4i0uh{m]\' --docker-email=\'a@b.com\'"'
+                sh 'sudo runuser -l opc -c "kubectl create secret docker-registry secret --docker-server=eu-frankfurt-1.ocir.io --docker-username=\'emeaseitalysandbox/oracleidentitycloud/luca.bindi@oracle.com\' --docker-password=\'uASDz34:E0c)4i0uh{m]\' --docker-email=\'a@b.com\' --namespace=namespace-winedemo"'
                 sh 'sudo runuser -l opc -c "sudo docker login -u \'emeaseitalysandbox/oracleidentitycloud/luca.bindi@oracle.com\' -p \'uASDz34:E0c)4i0uh{m]\' eu-frankfurt-1.ocir.io "'
                 sh 'sudo runuser -l opc -c "kubectl apply -f /var/lib/jenkins/workspace/wine_demo_master/namespace.yaml"'
                 sh 'sudo runuser -l opc -c "kubectl apply -f /var/lib/jenkins/workspace/wine_demo_master/oke_deployment.yaml"'
@@ -111,7 +111,7 @@ rimuove il commento  */
                                         )}""" 
                             println "stampa loadbalance_ip : " +   LBIP 
 //                           // println "Waiting for clone AJD "+ identifier_clone +" in status "+corret_status+" but it is : ->  " + status +"  <-"
-                            return  (LBIP.trim()  );
+                            return  (LBIP.trim()!="<pending>"  );
                          }
                         }
                 } 
@@ -122,4 +122,6 @@ rimuove il commento  */
 }    
 //kubectl delete -f /var/lib/jenkins/workspace/wine_demo_master/namespace.yaml
 //kubectl delete -f /var/lib/jenkins/workspace/wine_demo_master/oke_deployment.yaml   
-//kubectl delete secret docker-registry secret
+//kubectl delete secret secret --namespace=namespace-winedemo
+//kubectl get pods --namespace=namespace-winedemo
+//kubectl describe pods  $(kubectl get pods --namespace=namespace-winedemo|grep wine|awk '{print $1}') --namespace=namespace-winedemo

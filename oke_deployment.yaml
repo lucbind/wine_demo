@@ -1,3 +1,8 @@
+kind: Namespace
+apiVersion: v1
+metadata:
+   name: namespace-winedemo
+---
 kind: Service
 apiVersion: v1
 metadata:
@@ -53,15 +58,15 @@ spec:
           value: "ADMIN"
         - name: NODE_ORACLEDB_PASSWORD
           value: "DataBase##11"
-        - name: NODE_ORACLEDB_CONNECTIONSTRING
-          value: "jsonattack_high"        
-        - name: TNS_ADMIN
-          value: "/wallet"        
+#        - name: NODE_ORACLEDB_CONNECTIONSTRING
+#          value: "jsonattack_high"        
+#        - name: TNS_ADMIN
+#          value: "/wallet"        
         imagePullPolicy: Always
         ports:
         - containerPort: 3000
       imagePullSecrets:
-        - name: secret
+      - name: secret
 #      nodeSelector: 
 #        name: PRO
 ---
