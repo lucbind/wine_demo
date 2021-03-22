@@ -62,8 +62,7 @@ pipeline {
                 }
                         // 10 minuti  
                 steps {
-               // timeout(time: 600, unit: 'SECONDS') {
-                timeout(time: 30, unit: 'SECONDS') {
+                timeout(time: 600, unit: 'SECONDS') {
                         waitUntil {
                             script {
                             def status = """${sh(
