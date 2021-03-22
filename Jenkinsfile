@@ -70,7 +70,7 @@ pipeline {
                                             script: '/usr/local/bin/oci --config-file /home/jenkins/.oci/config db autonomous-database get --autonomous-database-id ${identifier_clone} --raw-output --query \"data\"|awk -F \\" \'{ if ($2==\"lifecycle-state\") print $4}\''                           
                                         )}"""
                             println "Waiting for clone AJD in status AVAILABLE but it is : ->  " + status +"  <-"
-                            return  (status =\'AVAILABLE\');
+                            return  (status == 'STOPPED');
                          }
                         }
                 }                      
