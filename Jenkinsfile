@@ -90,19 +90,30 @@ pipeline {
             steps {
             sh "cp dbwallet.zip json-in-db-master/WineDemo"
             sh "sudo docker build json-in-db-master/WineDemo/. -t windemo:1"
+            sh "sudo docker login -u 'emeaseitalysandbox/oracleidentitycloud/luca.bindi@oracle.com' -p 'uASDz34:E0c)4i0uh{m]' eu-frankfurt-1.ocir.io"
+            sh "sudo docker tag winedemo:1 eu-frankfurt-1.ocir.io/emeaseitalysandbox/winedemo:winedemo"
+            sh 'sudo docker push eu-frankfurt-1.ocir.io/emeaseitalysandbox/winedemo:winedemo'
             }    
         } 
         stage('K8s Create namespace ') {
         /* This stage builds the actual image; synonymous to  docker build on the command line */
             steps {
-                  label 'Namespace'
-                  defaultContainer 'jnlp'
-                  yaml """
-                        apiVersion: v1
-                        kind: Namespace
-                        metadata:
-                        name: ${k8s_name_space}
-                    """
+                sh "kubectl apply -f namespace.yaml"
+                sh "kubectl apply -f oke_deployment.yaml"
+                timeout(time: 30, unit: 'SECONDS') {
+                        waitUntil {
+                            script {
+                            def LBIP = """${sh(
+                                            script: 'kubectl get services --namespace=namespace_winedemo | grep \'winedemo\' | awk \'{print $4}\''                         
+                                            ,returnStdout: true 
+                                        )}""" 
+                            println "stampa loadbalance_ip : " +   LBIP 
+//                           // println "Waiting for clone AJD "+ identifier_clone +" in status "+corret_status+" but it is : ->  " + status +"  <-"
+                            return  (LBIP.trim()  );
+                         }
+                        }
+                } 
+                echo "external-IP $LBIP"
             }    
         } 
     }
