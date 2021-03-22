@@ -105,12 +105,12 @@ rimuove il commento  */
                         waitUntil {
                             script {
                             def LBIP = """${sh(
-                                            script: 'sudo runuser -l opc -c "kubectl get services --namespace=namespace-winedemo |grep \'winedemo\' | grep -v \'pending\' "'                         
+                                            script: 'sudo runuser -l opc -c "kubectl get services --namespace=namespace-winedemo |grep \'winedemo\' | grep  \'pending\' "'                         
                                             ,returnStatus: true 
                                         )}""" 
                             println "stampa loadbalance_ip : " +   LBIP 
 //                           // println "Waiting for clone AJD "+ identifier_clone +" in status "+corret_status+" but it is : ->  " + status +"  <-"
-                            return  LBIP == 0 ;
+                            return  LBIP == 1 ;
                          }
                         }
                 } 
