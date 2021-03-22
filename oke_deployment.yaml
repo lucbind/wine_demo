@@ -48,9 +48,6 @@ spec:
             cpu: "1"
           requests:
             cpu: "0.5"
-      imagePullSecrets:
-        # enter the name of the secret you created
-        - name: secret
         env:
         - name: NODE_ORACLEDB_USER
           value: "ADMIN"
@@ -64,7 +61,7 @@ spec:
         ports:
         - containerPort: 3000
       imagePullSecrets:
-        - name: ocirsecret
+        - name: secret
 #      nodeSelector: 
 #        name: PRO
 ---
