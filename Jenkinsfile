@@ -40,6 +40,7 @@ pipeline {
                 } 
             steps {
                 script {
+                    println "test x"
                     println "output: x" + identifier_clone +"x"
                     if (!identifier_clone) {
                          //#cloniamo 
