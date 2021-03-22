@@ -65,8 +65,7 @@ pipeline {
                 }
                         // 10 minuti  
                 steps {
-               // timeout(time: 600, unit: 'SECONDS') {
-                timeout(time: 30, unit: 'SECONDS') {
+                timeout(time: 600, unit: 'SECONDS') {
                         waitUntil {
                             script {
                             def status = """${sh(
@@ -102,7 +101,7 @@ rimuove il commento  */
                 sh 'sudo runuser -l opc -c "kubectl create secret docker-registry secret --docker-server=eu-frankfurt-1.ocir.io --docker-username=\'emeaseitalysandbox/oracleidentitycloud/luca.bindi@oracle.com\' --docker-password=\'uASDz34:E0c)4i0uh{m]\' --docker-email=\'a@b.com\' --namespace=namespace-winedemo"'
                 sh 'sudo runuser -l opc -c "sudo docker login -u \'emeaseitalysandbox/oracleidentitycloud/luca.bindi@oracle.com\' -p \'uASDz34:E0c)4i0uh{m]\' eu-frankfurt-1.ocir.io "'
                 sh 'sudo runuser -l opc -c "kubectl apply -f /var/lib/jenkins/workspace/wine_demo_master/oke_deployment.yaml"'
-                timeout(time: 30, unit: 'SECONDS') {
+                timeout(time: 300, unit: 'SECONDS') {
                         waitUntil {
                             script {
                             def LBIP = """${sh(
