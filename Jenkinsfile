@@ -72,7 +72,7 @@ pipeline {
                                         )}"""  
 //                            println "stampa status : " +   status 
 //                           // println "Waiting for clone AJD "+ identifier_clone +" in status "+corret_status+" but it is : ->  " + status +"  <-"
-//                            return  (status == "AVAILABLE");
+                            return  (status == 0);
                          }
                         }
                 }                      
