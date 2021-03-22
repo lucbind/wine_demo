@@ -40,7 +40,7 @@ pipeline {
                 } 
             steps {
                 script {
-                    echo "output: ${identifier_clone}"
+                    echo "output: x" + identifier_clone +"x"
                     if (!identifier_clone) {
                          //#cloniamo 
                         echo "Create clone because it is not exist "
