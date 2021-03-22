@@ -106,7 +106,7 @@ rimuove il commento  */
                         waitUntil {
                             script {
                             def LBIP = """${sh(
-                                            script: 'sudo runuser -l opc -c "kubectl get services --namespace=namespace-winedemo |grep 'winedemo' | grep -v \'pending\' "'                         
+                                            script: 'sudo runuser -l opc -c "kubectl get services --namespace=namespace-winedemo |grep \'winedemo\' | grep -v \'pending\' "'                         
                                             ,returnStatus: true 
                                         )}""" 
                             println "stampa loadbalance_ip : " +   LBIP 
