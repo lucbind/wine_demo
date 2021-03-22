@@ -105,6 +105,3 @@ pipeline {
         } 
     }
 }       
-
-kubectl apply -f namespace_rancher_creation.yaml
-
