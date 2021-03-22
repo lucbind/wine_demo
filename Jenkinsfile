@@ -72,7 +72,6 @@ pipeline {
                                         )}"""
                             if (status == corret_status){
                                 println "Waiting for clone AJD in status AVAILABLE but it is : ->  " + status +"  <-"
-                                return (true)
                             }  
                             /*          
                             println "Waiting for clone AJD in status AVAILABLE but it is : ->  " + status +"  <-"
