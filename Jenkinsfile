@@ -39,7 +39,7 @@ pipeline {
                 } 
             steps {
                 script {
-                    echo "${identifier_clone}"
+                    echo "output: ${identifier_clone}"
                     if (identifier_clone=="Query returned empty result, no output to show.") {
                          //#cloniamo 
                         echo "Create clone because it is not exist "
