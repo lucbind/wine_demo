@@ -84,7 +84,7 @@ pipeline {
                     }
                 }  
         }     
-            
+ /*           
         stage('Build docker image') {
             steps {
             sh "cp dbwallet.zip json-in-db-master/WineDemo"
@@ -94,14 +94,14 @@ pipeline {
             sh 'sudo docker push eu-frankfurt-1.ocir.io/emeaseitalysandbox/winedemo:winedemo'
             }    
         } 
-
+*/
         stage('K8s deploy App ') {
         /* This stage builds the actual image; synonymous to  docker build on the command line */
             steps {
                 sh 'sudo runuser -l opc -c "kubectl create secret docker-registry secret --docker-server=eu-frankfurt-1.ocir.io --docker-username=\'emeaseitalysandbox/oracleidentitycloud/luca.bindi@oracle.com\' --docker-password=\'uASDz34:E0c)4i0uh{m]\' --docker-email=\'a@b.com\'"'
                 sh 'sudo runuser -l opc -c "sudo docker login -u \'emeaseitalysandbox/oracleidentitycloud/luca.bindi@oracle.com\' -p \'uASDz34:E0c)4i0uh{m]\' eu-frankfurt-1.ocir.io "'
-                sh 'sudo runuser -l opc -c "kubectl apply -f namespace.yaml"'
-                sh 'sudo runuser -l opc -c "kubectl apply -f oke_deployment.yaml"'
+                sh 'sudo runuser -l opc -c "kubectl apply -f /var/lib/jenkins/workspace/wine_demo_master/namespace.yaml"'
+                sh 'sudo runuser -l opc -c "kubectl apply -f /var/lib/jenkins/workspace/wine_demo_master/oke_deployment.yaml"'
                 timeout(time: 30, unit: 'SECONDS') {
                         waitUntil {
                             script {
