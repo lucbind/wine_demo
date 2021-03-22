@@ -84,7 +84,7 @@ pipeline {
                     }
                 }  
         }     
- /*           
+/* rimuove il commento           
         stage('Build docker image') {
             steps {
             sh "cp dbwallet.zip json-in-db-master/WineDemo"
@@ -94,7 +94,7 @@ pipeline {
             sh 'sudo docker push eu-frankfurt-1.ocir.io/emeaseitalysandbox/winedemo:winedemo'
             }    
         } 
-*/
+rimuove il commento  */
         stage('K8s deploy App ') {
         /* This stage builds the actual image; synonymous to  docker build on the command line */
             steps {
@@ -122,3 +122,4 @@ pipeline {
 }    
 //kubectl delete -f /var/lib/jenkins/workspace/wine_demo_master/namespace.yaml
 //kubectl delete -f /var/lib/jenkins/workspace/wine_demo_master/oke_deployment.yaml   
+//kubectl delete secret docker-registry secret
