@@ -2,7 +2,7 @@ kind: Service
 apiVersion: v1
 metadata:
   name: winedemo
-  namespace: namespace_winedemo
+  namespace: namespace-winedemo
   labels:
     app: winedemo
   annotations:
@@ -23,7 +23,7 @@ kind: Deployment
 apiVersion: apps/v1
 metadata:
   name: winedemo
-  namespace: namespace_winedemo
+  namespace: namespace-winedemo
 spec:
   replicas: 1
   strategy:
@@ -48,6 +48,9 @@ spec:
             cpu: "1"
           requests:
             cpu: "0.5"
+      imagePullSecrets:
+        # enter the name of the secret you created
+        - name: secret
         env:
         - name: NODE_ORACLEDB_USER
           value: "ADMIN"
@@ -69,7 +72,7 @@ apiVersion: autoscaling/v2beta2
 kind: HorizontalPodAutoscaler
 metadata:
   name: winedemo
-  namespace: namespace_winedemo
+  namespace: namespace-winedemo
 spec:
   scaleTargetRef:
     apiVersion: apps/v1

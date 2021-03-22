@@ -84,7 +84,7 @@ pipeline {
                     }
                 }  
         }     
- /*           
+            
         stage('Build docker image') {
             steps {
             sh "cp dbwallet.zip json-in-db-master/WineDemo"
@@ -94,17 +94,19 @@ pipeline {
             sh 'sudo docker push eu-frankfurt-1.ocir.io/emeaseitalysandbox/winedemo:winedemo'
             }    
         } 
-*/
+
         stage('K8s deploy App ') {
         /* This stage builds the actual image; synonymous to  docker build on the command line */
             steps {
-                sh "sudo /usr/local/bin/kubectl apply -f namespace.yaml"
-                sh "sudo /usr/local/bin/kubectl apply -f oke_deployment.yaml"
+                sh 'sudo runuser -l opc -c "kubectl create secret docker-registry secret --docker-server=eu-frankfurt-1.ocir.io --docker-username=\'emeaseitalysandbox/oracleidentitycloud/luca.bindi@oracle.com\' --docker-password=\'uASDz34:E0c)4i0uh{m]\' --docker-email=\'a@b.com\'"'
+                sh 'sudo runuser -l opc -c "sudo docker login -u \'emeaseitalysandbox/oracleidentitycloud/luca.bindi@oracle.com\' -p \'uASDz34:E0c)4i0uh{m]\' eu-frankfurt-1.ocir.io "'
+                sh 'sudo runuser -l opc -c "kubectl apply -f namespace.yaml"'
+                sh 'sudo runuser -l opc -c "kubectl apply -f oke_deployment.yaml"'
                 timeout(time: 30, unit: 'SECONDS') {
                         waitUntil {
                             script {
                             def LBIP = """${sh(
-                                            script: 'sudo /usr/local/bin/kubectl get services --namespace=namespace_winedemo | grep \'winedemo\' | awk \'{print $4}\''                         
+                                            script: 'sudo runuser -l opc -c "kubectl get services --namespace=namespace-winedemo | grep \'winedemo\' | awk \'{print $4}\'"'                         
                                             ,returnStdout: true 
                                         )}""" 
                             println "stampa loadbalance_ip : " +   LBIP 
@@ -117,4 +119,6 @@ pipeline {
             }    
         } 
     }
-}       
+}    
+//kubectl delete -f /var/lib/jenkins/workspace/wine_demo_master/namespace.yaml
+//kubectl delete -f /var/lib/jenkins/workspace/wine_demo_master/oke_deployment.yaml   
