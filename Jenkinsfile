@@ -84,9 +84,8 @@ pipeline {
                     }
                 }  
         }     
-               
+  /*             
         stage('Build docker image') {
-        /* This stage builds the actual image; synonymous to  docker build on the command line */
             steps {
             sh "cp dbwallet.zip json-in-db-master/WineDemo"
             sh "sudo docker build json-in-db-master/WineDemo/. -t windemo:1"
@@ -95,11 +94,12 @@ pipeline {
             sh 'sudo docker push eu-frankfurt-1.ocir.io/emeaseitalysandbox/winedemo:winedemo'
             }    
         } 
-        stage('K8s Create namespace ') {
+*/
+        stage('K8s deploy App ') {
         /* This stage builds the actual image; synonymous to  docker build on the command line */
             steps {
-                sh "kubectl apply -f namespace.yaml"
-                sh "kubectl apply -f oke_deployment.yaml"
+                sh "sudo kubectl apply -f namespace.yaml"
+                sh "sudo kubectl apply -f oke_deployment.yaml"
                 timeout(time: 30, unit: 'SECONDS') {
                         waitUntil {
                             script {
