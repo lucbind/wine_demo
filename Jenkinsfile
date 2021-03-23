@@ -30,7 +30,7 @@ pipeline {
                          }
                         }
                 } 
-                println  "load balancer ip :" +   LBIP
+                println  "load balancer ip :" 
             }    
         } 
     }
