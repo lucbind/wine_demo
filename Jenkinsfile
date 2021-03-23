@@ -93,7 +93,7 @@ pipeline {
                 
         stage('Push Oracle Docker Registry') {
             steps {
-                sh "sudo docker tag eu-frankfurt-1.ocir.io/emeaseitalysandbox/windemo:last eu-frankfurt-1.ocir.io/emeaseitalysandbox/winedemo:last"
+                sh "sudo docker tag eu-frankfurt-1.ocir.io/emeaseitalysandbox/windemo:1 eu-frankfurt-1.ocir.io/emeaseitalysandbox/winedemo:last"
                 sh 'sudo docker push eu-frankfurt-1.ocir.io/emeaseitalysandbox/winedemo:last'
             }    
         } 
