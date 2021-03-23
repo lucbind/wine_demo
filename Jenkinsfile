@@ -30,7 +30,13 @@ pipeline {
                          }
                         }
                 } 
-                println  "load balancer ip :" 
+                script {
+                            def LB_IP = """${sh(
+                                            script: 'sudo runuser -l opc -c "kubectl get services --namespace=namespace-winedemo |grep \'winedemo\' | awk \'{print $4}\'"'                         
+                                            ,returnStdout: true 
+                                        )}""" 
+                            println "WineDemo loadbalance ip : " +   LB_IP 
+                         }
             }    
         } 
     }
