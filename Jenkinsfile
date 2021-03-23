@@ -85,15 +85,18 @@ pipeline {
         }     
         stage('Build docker image') {
             steps {
-            sh "cp dbwallet.zip json-in-db-master/WineDemo"
-            sh "sudo docker build -t eu-frankfurt-1.ocir.io/emeaseitalysandbox/windemo:1 json-in-db-master/WineDemo/. "
-            sh "sudo docker login -u 'emeaseitalysandbox/oracleidentitycloud/luca.bindi@oracle.com' -p 'uASDz34:E0c)4i0uh{m]' eu-frankfurt-1.ocir.io"
-            }    
-        } 
+                script {
+                        sh "cp dbwallet.zip json-in-db-master/WineDemo"
+                        sh "sudo docker build -t eu-frankfurt-1.ocir.io/emeaseitalysandbox/windemo:1 json-in-db-master/WineDemo/. "
+                        sh "sudo docker login -u 'emeaseitalysandbox/oracleidentitycloud/luca.bindi@oracle.com' -p 'uASDz34:E0c)4i0uh{m]' eu-frankfurt-1.ocir.io"
+                }    
+            } 
+        }
+                
         stage('Push Oracle Docker Registry') {
             steps {
-            sh "sudo docker tag eu-frankfurt-1.ocir.io/emeaseitalysandbox/windemo:1 eu-frankfurt-1.ocir.io/emeaseitalysandbox/winedemo:last"
-            sh 'sudo docker push eu-frankfurt-1.ocir.io/emeaseitalysandbox/winedemo:last'
+                sh "sudo docker tag eu-frankfurt-1.ocir.io/emeaseitalysandbox/windemo:1 eu-frankfurt-1.ocir.io/emeaseitalysandbox/winedemo:last"
+                sh 'sudo docker push eu-frankfurt-1.ocir.io/emeaseitalysandbox/winedemo:last'
             }    
         } 
         stage('K8s clean Enviroment ') {
