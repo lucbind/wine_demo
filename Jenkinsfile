@@ -85,11 +85,9 @@ pipeline {
         }     
         stage('Build docker image') {
             steps {
-                script {
-                        sh "cp dbwallet.zip json-in-db-master/WineDemo"
-                        sh "sudo docker build -t eu-frankfurt-1.ocir.io/emeaseitalysandbox/windemo:1 json-in-db-master/WineDemo/. "
-                        sh "sudo docker login -u 'emeaseitalysandbox/oracleidentitycloud/luca.bindi@oracle.com' -p 'uASDz34:E0c)4i0uh{m]' eu-frankfurt-1.ocir.io"
-                }    
+                sh "cp dbwallet.zip json-in-db-master/WineDemo"
+                sh "sudo docker build -t eu-frankfurt-1.ocir.io/emeaseitalysandbox/windemo:1 json-in-db-master/WineDemo/. "
+                sh "sudo docker login -u 'emeaseitalysandbox/oracleidentitycloud/luca.bindi@oracle.com' -p 'uASDz34:E0c)4i0uh{m]' eu-frankfurt-1.ocir.io"  
             } 
         }
                 
@@ -102,18 +100,20 @@ pipeline {
         stage('K8s clean Enviroment ') {
         /*  This stage builds the actual image; synonymous to  docker build on the command line */
             steps {
-                def status0 = """${sh(
-                            script: 'sudo runuser -l opc -c "kubectl delete secret secret'                         
-                            ,returnStdout: true 
-                            )}""" 
-                def status1 = """${sh(
-                            script: 'sudo runuser -l opc -c "kubectl delete  -f /var/lib/jenkins/workspace/wine_demo_master/oke_deployment.yaml '                         
-                            ,returnStdout: true 
-                            )}""" 
-                def status2 = """${sh(
-                            script: 'sudo runuser -l opc -c "kubectl delete -f /var/lib/jenkins/workspace/wine_demo_master/namespace.yaml'                         
-                            ,returnStdout: true 
-                            )}""" 
+                script {
+                    def status0 = """${sh(
+                                script: 'sudo runuser -l opc -c "kubectl delete secret secret'                         
+                                ,returnStdout: true 
+                                )}""" 
+                    def status1 = """${sh(
+                                script: 'sudo runuser -l opc -c "kubectl delete  -f /var/lib/jenkins/workspace/wine_demo_master/oke_deployment.yaml '                         
+                                ,returnStdout: true 
+                                )}""" 
+                    def status2 = """${sh(
+                                script: 'sudo runuser -l opc -c "kubectl delete -f /var/lib/jenkins/workspace/wine_demo_master/namespace.yaml'                         
+                                ,returnStdout: true 
+                                )}""" 
+                }
             }
         }
         stage('K8s deploy Wine App ') {
