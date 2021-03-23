@@ -42,7 +42,7 @@ spec:
     spec:
       containers:
       - name: winedemo
-        image:  eu-frankfurt-1.ocir.io/emeaseitalysandbox/winedemo:1
+        image:  eu-frankfurt-1.ocir.io/emeaseitalysandbox/winedemo:last
         resources:
           limits:
             cpu: "1"

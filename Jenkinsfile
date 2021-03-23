@@ -102,15 +102,15 @@ pipeline {
             steps {
                 script {
                     def status0 = """${sh(
-                                script: 'sudo runuser -l opc -c "kubectl delete secret secret'                         
+                                script: 'sudo runuser -l opc -c "kubectl delete secret secret"'                         
                                 ,returnStdout: true 
                                 )}""" 
                     def status1 = """${sh(
-                                script: 'sudo runuser -l opc -c "kubectl delete  -f /var/lib/jenkins/workspace/wine_demo_master/oke_deployment.yaml '                         
+                                script: 'sudo runuser -l opc -c "kubectl delete  -f /var/lib/jenkins/workspace/wine_demo_master/oke_deployment.yaml "'                         
                                 ,returnStdout: true 
                                 )}""" 
                     def status2 = """${sh(
-                                script: 'sudo runuser -l opc -c "kubectl delete -f /var/lib/jenkins/workspace/wine_demo_master/namespace.yaml'                         
+                                script: 'sudo runuser -l opc -c "kubectl delete -f /var/lib/jenkins/workspace/wine_demo_master/namespace.yaml"'                         
                                 ,returnStdout: true 
                                 )}""" 
                 }
