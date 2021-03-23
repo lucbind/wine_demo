@@ -99,9 +99,18 @@ pipeline {
         stage('K8s clean Enviroment ') {
         /* This stage builds the actual image; synonymous to  docker build on the command line */
             steps {
-                sh 'sudo runuser -l opc -c "kubectl create secret secret >/dev/null 2>&1"'
-                sh 'sudo runuser -l opc -c "kubectl delete  -f /var/lib/jenkins/workspace/wine_demo_master/oke_deployment.yaml >/dev/null 2>&1"'
-                sh 'sudo runuser -l opc -c "kubectl delete -f /var/lib/jenkins/workspace/wine_demo_master/namespace.yaml >/dev/null 2>&1"'
+                def status0 = """${sh(
+                            script: 'sudo runuser -l opc -c "kubectl delete secret secret'                         
+                            ,returnStdout: true 
+                            )}""" 
+                def status1 = """${sh(
+                            script: 'sudo runuser -l opc -c "kubectl delete  -f /var/lib/jenkins/workspace/wine_demo_master/oke_deployment.yaml '                         
+                            ,returnStdout: true 
+                            )}""" 
+                def status2 = """${sh(
+                            script: 'sudo runuser -l opc -c "kubectl delete -f /var/lib/jenkins/workspace/wine_demo_master/namespace.yaml'                         
+                            ,returnStdout: true 
+                            )}""" 
             }
         }
         stage('K8s deploy Wine App ') {
