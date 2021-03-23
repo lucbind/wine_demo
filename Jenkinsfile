@@ -26,11 +26,11 @@ pipeline {
                                         )}""" 
                             println "stampa loadbalance_ip : " +   LBIP 
 //                           // println "Waiting for clone AJD "+ identifier_clone +" in status "+corret_status+" but it is : ->  " + status +"  <-"
-                            return  LBIP.trim() == "0" ;
+                            return  !LBIP == 0 ;
                          }
                         }
                 } 
-                echo "external-IP $LBIP"
+                println  "load balancer ip :" +   LBIP
             }    
         } 
     }
