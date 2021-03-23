@@ -97,7 +97,7 @@ pipeline {
             }    
         } 
         stage('K8s clean Enviroment ') {
-        /* This stage builds the actual image; synonymous to  docker build on the command line */
+        /*  This stage builds the actual image; synonymous to  docker build on the command line */
             steps {
                 def status0 = """${sh(
                             script: 'sudo runuser -l opc -c "kubectl delete secret secret'                         
