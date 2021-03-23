@@ -83,18 +83,28 @@ pipeline {
                     }
                 }  
         }     
-/* rimuove il commento           
         stage('Build docker image') {
             steps {
             sh "cp dbwallet.zip json-in-db-master/WineDemo"
-            sh "sudo docker build json-in-db-master/WineDemo/. -t windemo:1"
+            sh "sudo docker build -t eu-frankfurt-1.ocir.io/emeaseitalysandbox/windemo:1 json-in-db-master/WineDemo/. "
             sh "sudo docker login -u 'emeaseitalysandbox/oracleidentitycloud/luca.bindi@oracle.com' -p 'uASDz34:E0c)4i0uh{m]' eu-frankfurt-1.ocir.io"
-            sh "sudo docker tag eu-frankfurt-1.ocir.io/emeaseitalysandbox/windemo:1 eu-frankfurt-1.ocir.io/emeaseitalysandbox/winedemo:winedemo"
-            sh 'sudo docker push eu-frankfurt-1.ocir.io/emeaseitalysandbox/winedemo:winedemo'
             }    
         } 
-rimuove il commento  */
-        stage('K8s deploy App ') {
+        stage('Push Oracle Docker Registry') {
+            steps {
+            sh "sudo docker tag eu-frankfurt-1.ocir.io/emeaseitalysandbox/windemo:1 eu-frankfurt-1.ocir.io/emeaseitalysandbox/winedemo:last"
+            sh 'sudo docker push eu-frankfurt-1.ocir.io/emeaseitalysandbox/winedemo:last'
+            }    
+        } 
+        stage('K8s clean Enviroment ') {
+        /* This stage builds the actual image; synonymous to  docker build on the command line */
+            steps {
+                sh 'sudo runuser -l opc -c "kubectl create secret secret >/dev/null 2>&1"'
+                sh 'sudo runuser -l opc -c "kubectl delete  -f /var/lib/jenkins/workspace/wine_demo_master/oke_deployment.yaml >/dev/null 2>&1"'
+                sh 'sudo runuser -l opc -c "kubectl delete -f /var/lib/jenkins/workspace/wine_demo_master/namespace.yaml >/dev/null 2>&1"'
+            }
+        }
+        stage('K8s deploy Wine App ') {
         /* This stage builds the actual image; synonymous to  docker build on the command line */
             steps {
                 sh 'sudo runuser -l opc -c "kubectl apply -f /var/lib/jenkins/workspace/wine_demo_master/namespace.yaml"'

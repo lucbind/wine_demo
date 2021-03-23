@@ -42,7 +42,7 @@ spec:
     spec:
       containers:
       - name: winedemo
-        image:  eu-frankfurt-1.ocir.io/emeaseitalysandbox/winedemo:winedemo
+        image:  eu-frankfurt-1.ocir.io/emeaseitalysandbox/winedemo:1
         resources:
           limits:
             cpu: "1"
@@ -53,10 +53,10 @@ spec:
           value: "ADMIN"
         - name: NODE_ORACLEDB_PASSWORD
           value: "DataBase##11"
-#        - name: NODE_ORACLEDB_CONNECTIONSTRING
-#          value: "jsonattack_high"        
-#        - name: TNS_ADMIN
-#          value: "/wallet"        
+        - name: NODE_ORACLEDB_CONNECTIONSTRING
+          value: "jsonattack01_high"        
+        - name: TNS_ADMIN
+          value: "/wallet"        
         imagePullPolicy: Always
         ports:
         - containerPort: 3000

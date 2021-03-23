@@ -18,7 +18,7 @@ COPY . /app
 RUN rm -rf /app/package-lock.json    
 
 RUN unzip /app/dbwallet.zip -d /wallet && rm /app/dbwallet.zip && \
-#RUN ls -la /wallet && cat /wallet/sqlnet.ora && sed -i 's/?\/network\/admin/\/wallet/g' /wallet/sqlnet.ora && cat /wallet/sqlnet.ora
+RUN ls -la /wallet && cat /wallet/sqlnet.ora && sed -i 's/?\/network\/admin/\/wallet/g' /wallet/sqlnet.ora && cat /wallet/sqlnet.ora
     sed -i 's/?\/network\/admin/\/wallet/g' /wallet/sqlnet.ora
 
 RUN npm -g install @oracle/ojet-cli
