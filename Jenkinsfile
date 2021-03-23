@@ -93,29 +93,11 @@ pipeline {
                 
         stage('Push Oracle Docker Registry') {
             steps {
-                sh "sudo docker tag eu-frankfurt-1.ocir.io/emeaseitalysandbox/windemo:1 eu-frankfurt-1.ocir.io/emeaseitalysandbox/winedemo:last"
+                sh "sudo docker tag eu-frankfurt-1.ocir.io/emeaseitalysandbox/windemo:last eu-frankfurt-1.ocir.io/emeaseitalysandbox/winedemo:last"
                 sh 'sudo docker push eu-frankfurt-1.ocir.io/emeaseitalysandbox/winedemo:last'
             }    
         } 
-        stage('K8s clean Enviroment ') {
-        /*  This stage builds the actual image; synonymous to  docker build on the command line */
-            steps {
-                script {
-                    def status0 = """${sh(
-                                script: 'sudo runuser -l opc -c "kubectl delete secret secret"'                         
-                                ,returnStdout: true 
-                                )}""" 
-                    def status1 = """${sh(
-                                script: 'sudo runuser -l opc -c "kubectl delete  -f /var/lib/jenkins/workspace/wine_demo_master/oke_deployment.yaml "'                         
-                                ,returnStdout: true 
-                                )}""" 
-                    def status2 = """${sh(
-                                script: 'sudo runuser -l opc -c "kubectl delete -f /var/lib/jenkins/workspace/wine_demo_master/namespace.yaml"'                         
-                                ,returnStdout: true 
-                                )}""" 
-                }
-            }
-        }
+
         stage('K8s deploy Wine App ') {
         /* This stage builds the actual image; synonymous to  docker build on the command line */
             steps {
