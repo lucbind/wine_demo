@@ -22,6 +22,7 @@ pipeline {
               git url: 'https://github.com/lucbind/wine_demo.git'
              }  
         }   
+        
         stage ('Verify Variable'){
             steps {
                 echo "AJD compartmentid ${compartmentid}"
