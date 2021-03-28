@@ -43,10 +43,10 @@ pipeline {
         
         stage ('Verify Variable'){
             steps {
-                echo "AJD compartmentid ${compartmentid}"
-                echo "AJD identifier is ${identifier}"
-                echo "AJD dbname is     ${params.dbname}"
-                sh 'printenv'
+                println "AJD compartmentid "+ ${compartmentid}
+                println "AJD identifier is "+ ${identifier}
+                println "AJD dbname is "+ ${params.dbname}
+
             }
         }
 
