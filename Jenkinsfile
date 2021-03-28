@@ -28,7 +28,7 @@ pipeline {
                         )}"""
         identifier="""${sh(
                             returnStdout: true,
-                            script: '/usr/local/bin/oci --config-file /home/jenkins/.oci/config search resource free-text-search --text  \"${params.AJD_NAME}\" --raw-output --query "data.items[0].identifier"'
+                            script: '/usr/local/bin/oci --config-file /home/jenkins/.oci/config search resource free-text-search --text  JSONATTACK --raw-output --query "data.items[0].identifier"'
                         )}"""                            
     }   
    stages {
@@ -38,9 +38,17 @@ pipeline {
                  //  git config --global credential.username lucabind
                  //  git config --global credential.helper "Oneiros!973"
               git url: "${params.GIT_URL}"
-
              }  
         }   
+        
+        stage ('Verify Variable'){
+            steps {
+                println "AJD compartmentid "+ ${compartmentid}
+                println "AJD identifier is "+ ${identifier}
+                println "AJD dbname is "+ ${params.dbname}
+
+            }
+        }
 
         stage('Clone Autonomous DB') {
 /*
@@ -55,7 +63,7 @@ pipeline {
             steps {
                 script {
                      clone = """${sh(
-                            script: '/usr/local/bin/oci  --config-file /home/jenkins/.oci/config  db autonomous-database create-from-clone --compartment-id ${compartmentid} --db-name \"${params.AJD_NAME}\"01 --cpu-core-count 1 --source-id ${identifier} --clone-type full --admin-password DataBase##11 --data-storage-size-in-tbs 2 --is-auto-scaling-enabled true --display-name CLONEJENK --license-model LICENSE_INCLUDED'
+                            script: '/usr/local/bin/oci  --config-file /home/jenkins/.oci/config  db autonomous-database create-from-clone --compartment-id ${compartmentid} --db-name ${dbname}01 --cpu-core-count 1 --source-id ${identifier} --clone-type full --admin-password DataBase##11 --data-storage-size-in-tbs 2 --is-auto-scaling-enabled true --display-name CLONEJENK --license-model LICENSE_INCLUDED'
                             ,returnStatus: true 
                             )}"""
                     if (clone==0) {
@@ -70,7 +78,7 @@ pipeline {
                 environment { 
                       identifier_clone = """${sh(
                                             returnStdout: true,
-                                             script: '/usr/local/bin/oci --config-file /home/jenkins/.oci/config search resource free-text-search --text \"${params.AJD_NAME}\"01 --raw-output --query  "data.items[0].identifier"' 
+                                             script: '/usr/local/bin/oci --config-file /home/jenkins/.oci/config search resource free-text-search --text ${dbname}01 --raw-output --query  "data.items[0].identifier"' 
                                         )}"""
                       corret_status="AVAILABLE"
                 }
