@@ -34,7 +34,7 @@ pipeline {
    stages {
         stage('Clone Git') {
              steps {
-              git url: ${params.GIT_URL}
+              git url: "${params.GIT_URL}"
              }  
         }   
         
