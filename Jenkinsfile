@@ -38,6 +38,7 @@ pipeline {
                  //  git config --global credential.username lucabind
                  //  git config --global credential.helper "Oneiros!973"
               git url: "${params.GIT_URL}"
+              
              }  
         }   
         
