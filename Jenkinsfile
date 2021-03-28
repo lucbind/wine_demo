@@ -37,7 +37,7 @@ pipeline {
                  // The below will clone your repo and will be checked out to master branch by default.
                  //  git config --global credential.username lucabind
                  //  git config --global credential.helper "Oneiros!973"
-              git url: 'https://github.com/lucbind/wine_demo.git'
+              git url: ${params.GIT_URL}
              }  
         }   
         
