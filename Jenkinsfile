@@ -1,34 +1,16 @@
 pipeline {
     agent any 
-  parameters {
-    string(name: 'ORDS_HOST'      , defaultValue: '130.61.153.50'                 , description: 'The IP address or the FQDN of the host running ORDS')
-    string(name: 'ORDS_PORT'      , defaultValue: '8088'                          , description: 'The port of the host where ORDS listens to')
-    string(name: 'PROD_PDB'       , defaultValue: 'PDB1'                          , description: 'The name of the PROD pluggable database')
-    string(name: 'PROD_CLONE_PDB' , defaultValue: 'PDB1_CLONE'                    , description: 'The name of the cloned PROD pluggable database')
-    string(name: 'PROD_PDB_CREDS' , defaultValue: 'pdb-creds'                     , description: 'The PDB credentials from Jenkins')
-    string(name: 'DB_HOSTNAME'    , defaultValue: 'cicd.subnet3.vcn.oraclevcn.com', description: 'The name of the DB host')
-    string(name: 'DB_PORT'        , defaultValue: '1521'                          , description: 'The port where the DB listens to')
-    string(name: 'DB_DOMAIN'      , defaultValue: 'subnet3.vcn.oraclevcn.com'     , description: 'The domain of the DB')
-
-    string(name: 'OCIR_REGION'    , defaultValue: 'fra.ocir.io'                   , description: 'The OCI registry to push the image to')
-    string(name: 'OCIR_NAMESPACE' , defaultValue: 'emeaseitalysandbox'            , description: 'The OCI tenancy namespace')
-    string(name: 'OCIR_REPOSITORY', defaultValue: 'pbellardone'                   , description: 'The name of the repository')
-    string(name: 'OCIR_CREDS'     , defaultValue: 'ocir-creds'                    , description: 'The OCIR credentials from Jenkins')
- 
-    string(name: 'GIT_URL'        , defaultValue: 'https://github.com/lucbind/wine_demo.git'    , description: 'The OCIR credentials from Jenkins')
-    string(name: 'AJD_NAME'       , defaultValue: 'JSONATTACK'                                  , description: 'The Autonomous JSON database name')
-    string(name: 'K8S_NAMESPACE'  , defaultValue: 'wine-demo-namespace'                         , description: 'The Namespace K8s ')
-  }
-
-    environment ('Set Variable database') {
+     environment ('Set Variable database') {
         // variabili per identificare l'autonomous  
+        dbname="JSONATTACK"    
+        k8s_name_space="wine-demo-namespace"
         compartmentid="""${sh(
                             returnStdout: true,
-                            script: '/usr/local/bin/oci  --config-file /home/jenkins/.oci/config search resource free-text-search --text \"${params.AJD_NAME}\" --raw-output --query "data.items[0]" |awk -F \\" \'{ if ($2==\"compartment-id\") print $4}\''
+                            script: '/usr/local/bin/oci  --config-file /home/jenkins/.oci/config search resource free-text-search --text JSON_ATTACK --raw-output --query "data.items[0]" |awk -F \\" \'{ if ($2==\"compartment-id\") print $4}\''
                         )}"""
         identifier="""${sh(
                             returnStdout: true,
-                            script: '/usr/local/bin/oci --config-file /home/jenkins/.oci/config search resource free-text-search --text  JSONATTACK --raw-output --query "data.items[0].identifier"'
+                            script: '/usr/local/bin/oci --config-file /home/jenkins/.oci/config search resource free-text-search --text JSON_ATTACK --raw-output --query "data.items[0].identifier"'
                         )}"""                            
     }   
    stages {
@@ -37,9 +19,17 @@ pipeline {
                  // The below will clone your repo and will be checked out to master branch by default.
                  //  git config --global credential.username lucabind
                  //  git config --global credential.helper "Oneiros!973"
-              git url: "${params.GIT_URL}"
+              git url: 'https://github.com/lucbind/wine_demo.git'
              }  
         }   
+        stage ('Verify Variable'){
+            steps {
+                echo "AJD compartmentid ${compartmentid}"
+                echo "AJD identifier is ${identifier}"
+                echo "AJD dbname is ${dbname}"
+                sh 'printenv'
+            }
+        }
 
         stage('Clone Autonomous DB') {
 /*
@@ -54,7 +44,7 @@ pipeline {
             steps {
                 script {
                      clone = """${sh(
-                            script: '/usr/local/bin/oci  --config-file /home/jenkins/.oci/config  db autonomous-database create-from-clone --compartment-id ${compartmentid} --db-name {params.AJD_NAME}01 --cpu-core-count 1 --source-id ${identifier} --clone-type full --admin-password DataBase##11 --data-storage-size-in-tbs 2 --is-auto-scaling-enabled true --display-name CLONEJENK --license-model LICENSE_INCLUDED'
+                            script: '/usr/local/bin/oci  --config-file /home/jenkins/.oci/config  db autonomous-database create-from-clone --compartment-id ${compartmentid} --db-name ${dbname}01 --cpu-core-count 1 --source-id ${identifier} --clone-type full --admin-password DataBase##11 --data-storage-size-in-tbs 2 --is-auto-scaling-enabled true --display-name CLONEJENK --license-model LICENSE_INCLUDED'
                             ,returnStatus: true 
                             )}"""
                     if (clone==0) {
@@ -69,7 +59,7 @@ pipeline {
                 environment { 
                       identifier_clone = """${sh(
                                             returnStdout: true,
-                                             script: '/usr/local/bin/oci --config-file /home/jenkins/.oci/config search resource free-text-search --text ${params.AJD_NAME} 01 --raw-output --query  "data.items[0].identifier"' 
+                                             script: '/usr/local/bin/oci --config-file /home/jenkins/.oci/config search resource free-text-search --text ${dbname}01 --raw-output --query  "data.items[0].identifier"' 
                                         )}"""
                       corret_status="AVAILABLE"
                 }
@@ -92,7 +82,7 @@ pipeline {
                     sh '''/usr/local/bin/oci --config-file /home/jenkins/.oci/config db autonomous-database generate-wallet --file dbwallet.zip --password DataBase##11 --autonomous-database-id  ${identifier_clone}'''
                     }
                 }  
-        }     
+        }      
         stage('Build docker image') {
             steps {
                 sh "cp dbwallet.zip json-in-db-master/WineDemo"
