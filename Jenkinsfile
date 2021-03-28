@@ -14,19 +14,24 @@ pipeline {
     string(name: 'OCIR_NAMESPACE' , defaultValue: 'emeaseitalysandbox'            , description: 'The OCI tenancy namespace')
     string(name: 'OCIR_REPOSITORY', defaultValue: 'pbellardone'                   , description: 'The name of the repository')
     string(name: 'OCIR_CREDS'     , defaultValue: 'ocir-creds'                    , description: 'The OCIR credentials from Jenkins')
+ 
+    string(name: 'AJD_NAME'       , defaultValue: 'JSONATTACK'                    , description: 'The Autonomous JSON database name')
+    string(name: 'k8s_name_space' , defaultValue: 'wine-demo-namespace'           , description: 'The Namespace K8s ')
+    string(name: 'compartmentid' , defaultValue: 'wine-demo-namespace'           , description: 'The Namespace K8s ')
+    string(name: 'identifier' , defaultValue: 'wine-demo-namespace'           , description: 'The Namespace K8s ')
+
+
   }
 
      environment ('Set Variable database') {
-        // variabili per identificare l'autonomous  
-        dbname="JSONATTACK"    
-        k8s_name_space="wine-demo-namespace"
+        // variabili per identificare l'autonomous     
         compartmentid="""${sh(
                             returnStdout: true,
-                            script: '/usr/local/bin/oci  --config-file /home/jenkins/.oci/config search resource free-text-search --text JSON_ATTACK --raw-output --query "data.items[0]" |awk -F \\" \'{ if ($2==\"compartment-id\") print $4}\''
+                            script: '/usr/local/bin/oci  --config-file /home/jenkins/.oci/config search resource free-text-search --text ${AJD_NAME} --raw-output --query "data.items[0]" |awk -F \\" \'{ if ($2==\"compartment-id\") print $4}\''
                         )}"""
         identifier="""${sh(
                             returnStdout: true,
-                            script: '/usr/local/bin/oci --config-file /home/jenkins/.oci/config search resource free-text-search --text JSON_ATTACK --raw-output --query "data.items[0].identifier"'
+                            script: '/usr/local/bin/oci --config-file /home/jenkins/.oci/config search resource free-text-search --text ${AJD_NAME} --raw-output --query "data.items[0].identifier"'
                         )}"""                            
     }   
    stages {
