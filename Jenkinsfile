@@ -17,21 +17,17 @@ pipeline {
  
     string(name: 'AJD_NAME'       , defaultValue: 'JSONATTACK'                    , description: 'The Autonomous JSON database name')
     string(name: 'k8s_name_space' , defaultValue: 'wine-demo-namespace'           , description: 'The Namespace K8s ')
-    string(name: 'compartmentid'  , defaultValue: 'xxxxxxx'           , description: 'The Namespace K8s ')
-    string(name: 'identifier'     , defaultValue: 'xxxxxxx'           , description: 'The Namespace K8s ')
-
-
   }
 
     environment ('Set Variable database') {
         // variabili per identificare l'autonomous  
         dbname="JSONATTACK"    
         k8s_name_space="wine-demo-namespace"
-        params.compartmentid="""${sh(
+        compartmentid="""${sh(
                             returnStdout: true,
                             script: '/usr/local/bin/oci  --config-file /home/jenkins/.oci/config search resource free-text-search --text \"${params.AJD_NAME}\" --raw-output --query "data.items[0]" |awk -F \\" \'{ if ($2==\"compartment-id\") print $4}\''
                         )}"""
-        params.identifier="""${sh(
+        identifier="""${sh(
                             returnStdout: true,
                             script: '/usr/local/bin/oci --config-file /home/jenkins/.oci/config search resource free-text-search --text \"${params.AJD_NAME}\" --raw-output --query "data.items[0].identifier"'
                         )}"""                            
@@ -48,8 +44,8 @@ pipeline {
         
         stage ('Verify Variable'){
             steps {
-                echo "AJD compartmentid ${params.compartmentid}"
-                echo "AJD identifier is ${params.identifier}"
+                echo "AJD compartmentid ${compartmentid}"
+                echo "AJD identifier is ${identifier}"
                 echo "AJD dbname is ${params.dbname}"
                 sh 'printenv'
             }
