@@ -1,5 +1,21 @@
 pipeline {
     agent any 
+  parameters {
+    string(name: 'ORDS_HOST'      , defaultValue: '130.61.153.50'                 , description: 'The IP address or the FQDN of the host running ORDS')
+    string(name: 'ORDS_PORT'      , defaultValue: '8088'                          , description: 'The port of the host where ORDS listens to')
+    string(name: 'PROD_PDB'       , defaultValue: 'PDB1'                          , description: 'The name of the PROD pluggable database')
+    string(name: 'PROD_CLONE_PDB' , defaultValue: 'PDB1_CLONE'                    , description: 'The name of the cloned PROD pluggable database')
+    string(name: 'PROD_PDB_CREDS' , defaultValue: 'pdb-creds'                     , description: 'The PDB credentials from Jenkins')
+    string(name: 'DB_HOSTNAME'    , defaultValue: 'cicd.subnet3.vcn.oraclevcn.com', description: 'The name of the DB host')
+    string(name: 'DB_PORT'        , defaultValue: '1521'                          , description: 'The port where the DB listens to')
+    string(name: 'DB_DOMAIN'      , defaultValue: 'subnet3.vcn.oraclevcn.com'     , description: 'The domain of the DB')
+
+    string(name: 'OCIR_REGION'    , defaultValue: 'fra.ocir.io'                   , description: 'The OCI registry to push the image to')
+    string(name: 'OCIR_NAMESPACE' , defaultValue: 'emeaseitalysandbox'            , description: 'The OCI tenancy namespace')
+    string(name: 'OCIR_REPOSITORY', defaultValue: 'pbellardone'                   , description: 'The name of the repository')
+    string(name: 'OCIR_CREDS'     , defaultValue: 'ocir-creds'                    , description: 'The OCIR credentials from Jenkins')
+  }
+
      environment ('Set Variable database') {
         // variabili per identificare l'autonomous  
         dbname="JSONATTACK"    
