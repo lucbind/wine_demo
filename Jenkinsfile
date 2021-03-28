@@ -29,7 +29,7 @@ pipeline {
         k8s_name_space="wine-demo-namespace"
         compartmentid="""${sh(
                             returnStdout: true,
-                            script: '/usr/local/bin/oci  --config-file /home/jenkins/.oci/config search resource free-text-search --text \"${params.AJD_NAME} --raw-output --query "data.items[0]" |awk -F \\" \'{ if ($2==\"compartment-id\") print $4}\''
+                            script: '/usr/local/bin/oci  --config-file /home/jenkins/.oci/config search resource free-text-search --text \"${params.AJD_NAME}\" --raw-output --query "data.items[0]" |awk -F \\" \'{ if ($2==\"compartment-id\") print $4}\''
                         )}"""
         identifier="""${sh(
                             returnStdout: true,
