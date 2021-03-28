@@ -27,13 +27,13 @@ pipeline {
         // variabili per identificare l'autonomous  
         dbname="JSONATTACK"    
         k8s_name_space="wine-demo-namespace"
-        compartmentid="""${sh(
+        params.compartmentid="""${sh(
                             returnStdout: true,
                             script: '/usr/local/bin/oci  --config-file /home/jenkins/.oci/config search resource free-text-search --text \"${params.AJD_NAME}\" --raw-output --query "data.items[0]" |awk -F \\" \'{ if ($2==\"compartment-id\") print $4}\''
                         )}"""
-        identifier="""${sh(
+        params.identifier="""${sh(
                             returnStdout: true,
-                            script: '/usr/local/bin/oci --config-file /home/jenkins/.oci/config search resource free-text-search --text JSON_ATTACK --raw-output --query "data.items[0].identifier"'
+                            script: '/usr/local/bin/oci --config-file /home/jenkins/.oci/config search resource free-text-search --text \"${params.AJD_NAME}\" --raw-output --query "data.items[0].identifier"'
                         )}"""                            
     }   
    stages {
