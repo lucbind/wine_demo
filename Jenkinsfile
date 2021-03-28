@@ -38,18 +38,9 @@ pipeline {
                  //  git config --global credential.username lucabind
                  //  git config --global credential.helper "Oneiros!973"
               git url: "${params.GIT_URL}"
-              
+
              }  
         }   
-        
-        stage ('Verify Variable'){
-            steps {
-                println "AJD compartmentid "+ ${compartmentid}
-                println "AJD identifier is "+ ${identifier}
-                println "AJD dbname is "+ ${params.dbname}
-
-            }
-        }
 
         stage('Clone Autonomous DB') {
 /*
