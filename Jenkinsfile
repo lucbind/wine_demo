@@ -17,19 +17,19 @@ pipeline {
  
     string(name: 'AJD_NAME'       , defaultValue: 'JSONATTACK'                    , description: 'The Autonomous JSON database name')
     string(name: 'k8s_name_space' , defaultValue: 'wine-demo-namespace'           , description: 'The Namespace K8s ')
-    string(name: 'compartmentid' , defaultValue: 'wine-demo-namespace'           , description: 'The Namespace K8s ')
-    string(name: 'identifier' , defaultValue: 'wine-demo-namespace'           , description: 'The Namespace K8s ')
+    string(name: 'compartmentid'  , defaultValue: 'xxxxxxx'           , description: 'The Namespace K8s ')
+    string(name: 'identifier'     , defaultValue: 'xxxxxxx'           , description: 'The Namespace K8s ')
 
 
   }
 
      environment ('Set Variable database') {
         // variabili per identificare l'autonomous     
-        params.compartmentid="""${sh(
+        compartmentid="""${sh(
                             returnStdout: true,
                             script: '/usr/local/bin/oci  --config-file /home/jenkins/.oci/config search resource free-text-search --text ${params.AJD_NAME} --raw-output --query "data.items[0]" |awk -F \\" \'{ if ($2==\"compartment-id\") print $4}\''
                         )}"""
-        params.identifier="""${sh(
+        identifier="""${sh(
                             returnStdout: true,
                             script: '/usr/local/bin/oci --config-file /home/jenkins/.oci/config search resource free-text-search --text ${params.AJD_NAME} --raw-output --query "data.items[0].identifier"'
                         )}"""                            
