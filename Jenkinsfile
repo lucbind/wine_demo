@@ -1,6 +1,5 @@
 pipeline {
     agent any 
-    
   parameters {
     string(name: 'ORDS_HOST'      , defaultValue: '130.61.153.50'                 , description: 'The IP address or the FQDN of the host running ORDS')
     string(name: 'ORDS_PORT'      , defaultValue: '8088'                          , description: 'The port of the host where ORDS listens to')
