@@ -15,14 +15,13 @@ pipeline {
     string(name: 'OCIR_REPOSITORY', defaultValue: 'pbellardone'                   , description: 'The name of the repository')
     string(name: 'OCIR_CREDS'     , defaultValue: 'ocir-creds'                    , description: 'The OCIR credentials from Jenkins')
  
-    string(name: 'AJD_NAME'       , defaultValue: 'JSONATTACK'                    , description: 'The Autonomous JSON database name')
-    string(name: 'k8s_name_space' , defaultValue: 'wine-demo-namespace'           , description: 'The Namespace K8s ')
+    string(name: 'GIT_URL'        , defaultValue: 'https://github.com/lucbind/wine_demo.git'    , description: 'The OCIR credentials from Jenkins')
+    string(name: 'AJD_NAME'       , defaultValue: 'JSONATTACK'                                  , description: 'The Autonomous JSON database name')
+    string(name: 'K8S_NAMESPACE'  , defaultValue: 'wine-demo-namespace'                         , description: 'The Namespace K8s ')
   }
 
     environment ('Set Variable database') {
         // variabili per identificare l'autonomous  
-        dbname="JSONATTACK"    
-        k8s_name_space="wine-demo-namespace"
         compartmentid="""${sh(
                             returnStdout: true,
                             script: '/usr/local/bin/oci  --config-file /home/jenkins/.oci/config search resource free-text-search --text \"${params.AJD_NAME}\" --raw-output --query "data.items[0]" |awk -F \\" \'{ if ($2==\"compartment-id\") print $4}\''
@@ -38,7 +37,7 @@ pipeline {
                  // The below will clone your repo and will be checked out to master branch by default.
                  //  git config --global credential.username lucabind
                  //  git config --global credential.helper "Oneiros!973"
-              git url: 'https://github.com/lucbind/wine_demo.git'
+              git url: ${params.GIT_URL}
              }  
         }   
         
@@ -46,7 +45,7 @@ pipeline {
             steps {
                 echo "AJD compartmentid ${compartmentid}"
                 echo "AJD identifier is ${identifier}"
-                echo "AJD dbname is ${params.dbname}"
+                echo "AJD dbname is     ${params.dbname}"
                 sh 'printenv'
             }
         }
