@@ -25,10 +25,7 @@ pipeline {
 
      environment ('Set Variable database') {
         // variabili per identificare l'autonomous     
-        compartmentid="""${sh(
-                            returnStdout: true,
-                            script: '/usr/local/bin/oci  --config-file /home/jenkins/.oci/config search resource free-text-search --text  \"${params.AJD_NAME}\" --raw-output --query "data.items[0]" |awk -F \\" \'{ if ($2==\"compartment-id\") print $4}\''
-                        )}"""
+        compartmentid=sh (script: "/usr/local/bin/oci  --config-file /home/jenkins/.oci/config search resource free-text-search --text  \"${params.AJD_NAME}\" --raw-output --query \"data.items[0]\" |awk -F \\" \'{ if ($2==\"compartment-id\") print $4}\'"
         identifier="""${sh(
                             returnStdout: true,
                             script: '/usr/local/bin/oci --config-file /home/jenkins/.oci/config search resource free-text-search --text \"${params.AJD_NAME}\" --raw-output --query "data.items[0].identifier"'
